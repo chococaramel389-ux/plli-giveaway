@@ -159,8 +159,9 @@
             const twitter_handle = currentUser;
             const zone = document.getElementById('zone').value;
             const tweet_url = document.getElementById('tweetUrl').value;
+            const id = Date.now(); // สุ่มตัวเลขจากเวลาปัจจุบันมาใส่ id ป้องกันค่าว่าง
 
-            const { error } = await sbClient.from('giveaways').insert([{ twitter_handle, zone, tweet_url, status: 'กำลังแจก' }]);
+            const { error } = await sbClient.from('giveaways').insert([{ id, twitter_handle, zone, tweet_url, status: 'กำลังแจก' }]);
             if (error) {
                 alert('เกิดข้อผิดพลาด: ' + error.message);
             } else {

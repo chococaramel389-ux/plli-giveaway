@@ -6,7 +6,6 @@
     <title>PLLI Freebie Board - บอร์ดรวมของแจกคอนเสิร์ต</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <!-- Supabase JS Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style> body { font-family: 'Prompt', sans-serif; } </style>
 </head>
@@ -20,16 +19,14 @@
             
             <!-- ส่วนแสดงผลสถานะการล็อกอิน -->
             <div id="auth-section" class="flex items-center space-x-3">
-                <!-- ถ้ายังไม่ล็อกอิน -->
                 <div id="login-container">
-                    <button onclick="openLoginModal()" class="bg-indigo-600 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-indigo-700 transition">
-                        🐦 เข้าสู่ระบบด้วย X
+                    <button onclick="loginWithTwitter()" class="bg-black text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-slate-800 transition flex items-center space-x-2">
+                        <span>🐦 เข้าสู่ระบบด้วย X</span>
                     </button>
                 </div>
-                <!-- ถ้าล็อกอินแล้ว -->
                 <div id="user-container" class="hidden flex items-center space-x-3">
                     <span id="display-user" class="text-xs font-semibold text-slate-700 bg-slate-100 px-3 py-1.5 rounded-full"></span>
-                    <button onclick="openAddModal()" class="bg-black text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-slate-800 transition">
+                    <button onclick="openAddModal()" class="bg-indigo-600 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-indigo-700 transition">
                         + ลงทะเบียนของแจก
                     </button>
                     <button onclick="logout()" class="text-xs text-rose-500 hover:underline">ออกจากระบบ</button>
@@ -45,29 +42,10 @@
             <p class="text-slate-500 text-sm">รวมพิกัดของแจกน่ารักๆ ในคอนเสิร์ต เช็กสถานะ แจกอยู่ หรือ หมดแล้ว ได้ที่นี่!</p>
         </div>
 
-        <!-- Grid Cards -->
         <div id="giveaway-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             <div class="text-center col-span-full py-10 text-slate-400">กำลังโหลดข้อมูลของแจก...</div>
         </div>
     </main>
-
-    <!-- Modal สำหรับเข้าสู่ระบบ -->
-    <div id="loginModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-xl">
-            <h3 class="text-lg font-bold mb-2">เข้าสู่ระบบ</h3>
-            <p class="text-xs text-slate-500 mb-4">กรอกชื่อแอคเคาท์ทวิตเตอร์ของคุณเพื่อยืนยันตัวตนก่อนลงทะเบียนของแจก</p>
-            <form onsubmit="login(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">ชื่อทวิตเตอร์ (เช่น @username)</label>
-                    <input type="text" id="loginHandle" placeholder="@your_name" required class="w-full px-3 py-2 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                </div>
-                <div class="flex justify-end space-x-2 pt-2">
-                    <button type="button" onclick="closeLoginModal()" class="px-4 py-2 text-sm text-slate-500 hover:bg-slate-100 rounded-xl">ยกเลิก</button>
-                    <button type="submit" class="px-4 py-2 text-sm bg-indigo-600 text-white font-medium rounded-xl hover:bg-indigo-700">ยืนยัน</button>
-                </div>
-            </form>
-        </div>
-    </div>
 
     <!-- Modal สำหรับเพิ่มของแจก -->
     <div id="addModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center p-4 z-50">
@@ -93,11 +71,19 @@
     <script>
         const SUPABASE_URL = 'https://xrpifshmpqpotalzqjsw.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhycGlmc2htcHFwb3RhbHpxanN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYzNzUyNTQsImV4cCI6MjEwMTk1MTI1NH0.lsLrVMib26Rgg32mLAr8ZHpoV-qmMmy8KPD6J1e-FSs';
-        
         const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        let currentUser = localStorage.getItem('plli_user');
-        updateAuthUI();
+        let currentUser = null;
+
+        async function checkUser() {
+            const { data: { session } } = await sbClient.auth.getSession();
+            if (session && session.user) {
+                let name = session.user.user_metadata.user_name || session.user.user_metadata.preferred_username || session.user.email || 'User';
+                if (!name.startsWith('@')) name = '@' + name;
+                currentUser = name;
+                updateAuthUI();
+            }
+        }
 
         function updateAuthUI() {
             if (currentUser) {
@@ -110,24 +96,21 @@
             }
         }
 
-        function openLoginModal() { document.getElementById('loginModal').classList.remove('hidden'); }
-        function closeLoginModal() { document.getElementById('loginModal').classList.add('hidden'); }
-
-        function login(e) {
-            e.preventDefault();
-            let handle = document.getElementById('loginHandle').value.trim();
-            if (!handle.startsWith('@')) handle = '@' + handle;
-            
-            localStorage.setItem('plli_user', handle);
-            currentUser = handle;
-            closeLoginModal();
-            updateAuthUI();
+        async function loginWithTwitter() {
+            const { error } = await sbClient.auth.signInWithOAuth({
+                provider: 'twitter',
+                options: {
+                    redirectTo: window.location.origin
+                }
+            });
+            if (error) alert('ล็อกอินไม่สำเร็จ: ' + error.message);
         }
 
-        function logout() {
-            localStorage.removeItem('plli_user');
+        async function logout() {
+            await sbClient.auth.signOut();
             currentUser = null;
             updateAuthUI();
+            window.location.reload();
         }
 
         async function fetchGiveaways() {
@@ -140,7 +123,7 @@
             }
 
             if (!data || data.length === 0) {
-                grid.innerHTML = `<div class="text-center col-span-full py-10 text-slate-400">ยังไม่มีของแจกในระบบ เข้าสู่ระบบแล้วกดเพิ่มของแจกได้เลย!</div>`;
+                grid.innerHTML = `<div class="text-center col-span-full py-10 text-slate-400">ยังไม่มีของแจกในระบบ เข้าสู่ระบบด้วย X แล้วกดเพิ่มของแจกได้เลย!</div>`;
                 return;
             }
 
@@ -164,7 +147,7 @@
 
         function openAddModal() { 
             if (!currentUser) {
-                openLoginModal();
+                alert('กรุณาเข้าสู่ระบบด้วย X ก่อนเพิ่มของแจก');
                 return;
             }
             document.getElementById('addModal').classList.remove('hidden'); 
@@ -193,6 +176,7 @@
             fetchGiveaways();
         }
 
+        checkUser();
         fetchGiveaways();
     </script>
 </body>

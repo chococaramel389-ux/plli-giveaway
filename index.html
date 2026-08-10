@@ -132,9 +132,9 @@
                     <div>
                         <div class="flex justify-between items-center mb-3">
                             <span class="text-xs font-semibold text-slate-600">${item.twitter_handle}</span>
-                            <span onclick="toggleStatus(${item.id}, '${item.status}')" class="px-2.5 py-1 rounded-full text-xs font-medium cursor-pointer ${item.status === 'หมดแล้ว' ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}">
-                                ${item.status === 'หมดแล้ว' ? '🔴 ของหมดแล้ว' : '🟢 กำลังแจก'}
-                            </span>
+                            <span onclick="toggleStatus(${item.id}, '${item.twitter_handle}', '${item.status}')" class="px-2.5 py-1 rounded-full text-xs font-medium cursor-pointer transition ${item.twitter_handle === currentUser ? 'hover:opacity-75 cursor-pointer shadow-sm' : 'opacity-90'} ${item.status === 'หมดแล้ว' ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}">
+    ${item.status === 'หมดแล้ว' ? '🔴 ของหมดแล้ว' : '🟢 กำลังแจก'} ${item.twitter_handle === currentUser ? '(เปลี่ยนสถานะได้)' : ''}
+</span>
                         </div>
                         <div class="bg-slate-50 rounded-xl p-4 text-center text-xs text-indigo-600 mb-3 border border-slate-100 truncate">
                             <a href="${item.tweet_url}" target="_blank" class="hover:underline">🔗 ดูลิงก์ทวีตต้นฉบับ</a>
@@ -171,10 +171,25 @@
             }
         }
 
-        async function toggleStatus(id, currentStatus) {
+        async function toggleStatus(id, itemOwner, currentStatus) {
+            // เช็กว่าผู้ใช้ปัจจุบันล็อกอินอยู่ไหม และชื่อตรงกับเจ้าของโพสต์หรือเปล่า
+            if (!currentUser) {
+                alert('กรุณาเข้าสู่ระบบก่อนเปลี่ยนสถานะ');
+                return;
+            }
+            if (currentUser !== itemOwner) {
+                alert('คุณสามารถเปลี่ยนสถานะได้เฉพาะของแจกที่คุณเป็นเจ้าของเท่านั้น!');
+                return;
+            }
+
             const newStatus = currentStatus === 'กำลังแจก' ? 'หมดแล้ว' : 'กำลังแจก';
-            await sbClient.from('giveaways').update({ status: newStatus }).eq('id', id);
-            fetchGiveaways();
+            const { error } = await sbClient.from('giveaways').update({ status: newStatus }).eq('id', id);
+            
+            if (error) {
+                alert('เกิดข้อผิดพลาด: ' + error.message);
+            } else {
+                fetchGiveaways();
+            }
         }
 
         checkUser();

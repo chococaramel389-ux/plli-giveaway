@@ -93,9 +93,9 @@
     <script>
         const SUPABASE_URL = 'https://xrpifshmpqpotalzqjsw.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhycGlmc2htcHFwb3RhbHpxanN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYzNzUyNTQsImV4cCI6MjEwMTk1MTI1NH0.lsLrVMib26Rgg32mLAr8ZHpoV-qmMmy8KPD6J1e-FSs';
+        
         const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // ตรวจสอบสถานะล็อกอินตอนเปิดเว็บ
         let currentUser = localStorage.getItem('plli_user');
         updateAuthUI();
 
@@ -173,7 +173,7 @@
 
         async function addGiveaway(e) {
             e.preventDefault();
-            const twitter_handle = currentUser; // ใช้ชื่อจากคนที่ล็อกอินอยู่
+            const twitter_handle = currentUser;
             const zone = document.getElementById('zone').value;
             const tweet_url = document.getElementById('tweetUrl').value;
 

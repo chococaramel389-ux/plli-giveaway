@@ -62,16 +62,14 @@
     </div>
 
     <script>
-        // ตั้งค่าเชื่อมต่อ Supabase ของคุณ
         const SUPABASE_URL = 'https://xrpifshmpqpotalzqjsw.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhycGlmc2htcHFwb3RhbHpxanN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYzNzUyNTQsImV4cCI6MjEwMTk1MTI1NH0.lsLrVMib26Rgg32mLAr8ZHpoV-qmMmy8KPD6J1e-FSs'; // เดี๋ยวดึงค่า anon key มาใส่ตรงนี้ครับ
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhycGlmc2htcHFwb3RhbHpxanN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYzNzUyNTQsImV4cCI6MjEwMTk1MTI1NH0.lsLrVMib26Rgg32mLAr8ZHpoV-qmMmy8KPD6J1e-FSs';
         
-        // *หมายเหตุ: นำ Key "anon public" ที่ก๊อปปี้มาก่อนหน้านี้มาวางแทนที่ข้อความยาวๆ ข้างบนได้เลยครับ
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         async function fetchGiveaways() {
             const grid = document.getElementById('giveaway-grid');
-            const { data, error } = await supabase.from('giveaways').select('*').order('id', { ascending: false });
+            const { data, error } = await sbClient.from('giveaways').select('*').order('id', { ascending: false });
             
             if (error) {
                 grid.innerHTML = `<div class="text-center col-span-full py-10 text-rose-500">เกิดข้อผิดพลาดในการโหลดข้อมูล: ${error.message}</div>`;
@@ -110,7 +108,7 @@
             const zone = document.getElementById('zone').value;
             const tweet_url = document.getElementById('tweetUrl').value;
 
-            const { error } = await supabase.from('giveaways').insert([{ twitter_handle, zone, tweet_url, status: 'กำลังแจก' }]);
+            const { error } = await sbClient.from('giveaways').insert([{ twitter_handle, zone, tweet_url, status: 'กำลังแจก' }]);
             if (error) {
                 alert('เกิดข้อผิดพลาด: ' + error.message);
             } else {
@@ -122,7 +120,7 @@
 
         async function toggleStatus(id, currentStatus) {
             const newStatus = currentStatus === 'กำลังแจก' ? 'หมดแล้ว' : 'กำลังแจก';
-            await supabase.from('giveaways').update({ status: newStatus }).eq('id', id);
+            await sbClient.from('giveaways').update({ status: newStatus }).eq('id', id);
             fetchGiveaways();
         }
 

@@ -164,7 +164,6 @@
             }
 
             grid.innerHTML = dataToRender.map(item => {
-                // จำลองดึงข้อมูลพรีวิวคร่าวๆ หรือดึงแคปชั่นจากลิงก์ทวีต
                 const isOwner = (currentUser && item.twitter_handle === currentUser);
                 return `
                     <div class="bg-white rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between overflow-hidden hover:shadow-md transition">
@@ -177,7 +176,7 @@
                                 </span>
                             </div>
 
-                            <!-- รูปพรีวิวอัตราส่วน 1:1 จำลองจากทวีต หรือใช้รูปภาพประกอบ -->
+                            <!-- รูปพรีวิวอัตราส่วน 1:1 -->
                             <div class="w-full aspect-square bg-slate-100 relative overflow-hidden flex items-center justify-center border-y border-slate-100">
                                 <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?w=500&auto=format&fit=crop&q=60" alt="Freebie Image" class="w-full h-full object-cover">
                                 <div class="absolute bottom-2 left-2 bg-black/60 backdrop-blur-md text-white text-[10px] px-2.5 py-1 rounded-lg">
@@ -185,9 +184,9 @@
                                 </div>
                             </div>
 
-                            <!-- แคปชั่นรายละเอียดทวีต (แทนที่ตัว k) -->
+                            <!-- แคปชั่นรายละเอียดทวีต -->
                             <div class="p-4 text-xs text-slate-600 line-clamp-2">
-                                แจกสต๊กเกอร์และพวงกุญแจลายพิเศษหน้าฮอลล์คอนเสิร์ต แวะมารับกันได้เลยนะคะ แจกจนกว่าของจะหมดค่า ✨💖
+                                แจกสติ๊กเกอร์และพวงกุญแจลายพิเศษหน้าฮอลล์คอนเสิร์ต แวะมารับกันได้เลยนะคะ แจกจนกว่าของจะหมดค่า ✨💖
                             </div>
                         </div>
 
@@ -243,7 +242,7 @@
                 showPopup('เกิดข้อผิดพลาด', error.message, '❌');
             } else {
                 closeAddModal();
-                document.getElementById('giveawayForm'].reset();
+                document.getElementById('giveawayForm').reset(); // แก้ไขวงเล็บให้ถูกต้องแล้ว
                 showPopup('สำเร็จ', 'ลงทะเบียนของแจกเรียบร้อยแล้ว!', '🎉');
                 fetchGiveaways();
             }

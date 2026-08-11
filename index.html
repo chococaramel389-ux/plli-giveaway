@@ -17,7 +17,6 @@
                 ✨ PLLI Freebie Board
             </h1>
             
-            <!-- ส่วนแสดงผลสถานะการล็อกอินและปุ่มขวาสุด -->
             <div id="auth-section" class="flex items-center space-x-3">
                 <div id="login-container">
                     <button onclick="loginWithTwitter()" class="bg-black text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-slate-800 transition flex items-center space-x-2">
@@ -52,7 +51,7 @@
 
     <!-- Modal สำหรับเพิ่มของแจก -->
     <div id="addModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-2xl p-6 max-w-md w-full shadow-xl">
+        <div class="bg-white rounded-2xl p-6 max-w-md w-full shadow-xl max-h-[90vh] overflow-y-auto">
             <h3 class="text-lg font-bold mb-4">ลงทะเบียนของแจกใหม่</h3>
             <form id="giveawayForm" onsubmit="addGiveaway(event)" class="space-y-4">
                 <div>
@@ -63,15 +62,23 @@
                     <label class="block text-xs font-semibold text-slate-600 mb-1">ลิงก์โพสต์ทวีต (X)</label>
                     <input type="text" id="tweetUrl" placeholder="https://x.com/username/status/..." required class="w-full px-3 py-2 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">อัปโหลดรูปภาพของแจก (สัดส่วน 1:1)</label>
+                    <input type="file" id="imageFile" accept="image/*" required class="w-full px-3 py-2 border rounded-xl text-xs text-slate-500 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">รายละเอียด / แคปชั่น</label>
+                    <textarea id="caption" rows="3" placeholder="พิมพ์รายละเอียดของแจกหรือเงื่อนไขการรับที่นี่..." required class="w-full px-3 py-2 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+                </div>
                 <div class="flex justify-end space-x-2 pt-2">
                     <button type="button" onclick="closeAddModal()" class="px-4 py-2 text-sm text-slate-500 hover:bg-slate-100 rounded-xl">ยกเลิก</button>
-                    <button type="submit" class="px-4 py-2 text-sm bg-indigo-600 text-white font-medium rounded-xl hover:bg-indigo-700">บันทึก</button>
+                    <button type="submit" id="submitBtn" class="px-4 py-2 text-sm bg-indigo-600 text-white font-medium rounded-xl hover:bg-indigo-700">บันทึก</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Custom Popup Card แจ้งเตือนแทน Alert แบบเดิม -->
+    <!-- Custom Popup Card -->
     <div id="customPopup" class="fixed inset-0 bg-black/40 hidden flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl text-center transform transition-all">
             <div id="popup-icon" class="text-3xl mb-3">✨</div>
@@ -165,6 +172,9 @@
 
             grid.innerHTML = dataToRender.map(item => {
                 const isOwner = (currentUser && item.twitter_handle === currentUser);
+                const imageUrl = item.image_url || 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=500&auto=format&fit=crop&q=60';
+                const captionText = item.caption || 'แจกของที่ระลึกหน้าฮอลล์คอนเสิร์ต แวะมารับกันได้เลยนะคะ ✨💖';
+
                 return `
                     <div class="bg-white rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between overflow-hidden hover:shadow-md transition">
                         <div>
@@ -176,17 +186,17 @@
                                 </span>
                             </div>
 
-                            <!-- รูปพรีวิวอัตราส่วน 1:1 -->
+                            <!-- รูปภาพสัดส่วน 1:1 ของผู้ใช้ -->
                             <div class="w-full aspect-square bg-slate-100 relative overflow-hidden flex items-center justify-center border-y border-slate-100">
-                                <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?w=500&auto=format&fit=crop&q=60" alt="Freebie Image" class="w-full h-full object-cover">
+                                <img src="${imageUrl}" alt="Freebie Image" class="w-full h-full object-cover">
                                 <div class="absolute bottom-2 left-2 bg-black/60 backdrop-blur-md text-white text-[10px] px-2.5 py-1 rounded-lg">
                                     📍 ${item.zone}
                                 </div>
                             </div>
 
-                            <!-- แคปชั่นรายละเอียดทวีต -->
+                            <!-- แคปชั่นรายละเอียด -->
                             <div class="p-4 text-xs text-slate-600 line-clamp-2">
-                                แจกสติ๊กเกอร์และพวงกุญแจลายพิเศษหน้าฮอลล์คอนเสิร์ต แวะมารับกันได้เลยนะคะ แจกจนกว่าของจะหมดค่า ✨💖
+                                ${captionText}
                             </div>
                         </div>
 
@@ -232,19 +242,50 @@
 
         async function addGiveaway(e) {
             e.preventDefault();
-            const twitter_handle = currentUser;
-            const zone = document.getElementById('zone').value;
-            const tweet_url = document.getElementById('tweetUrl').value;
-            const id = Date.now();
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.innerText = 'กำลังอัปโหลด...';
+            submitBtn.disabled = true;
 
-            const { error } = await sbClient.from('giveaways').insert([{ id, twitter_handle, zone, tweet_url, status: 'กำลังแจก' }]);
-            if (error) {
-                showPopup('เกิดข้อผิดพลาด', error.message, '❌');
-            } else {
+            try {
+                const twitter_handle = currentUser;
+                const zone = document.getElementById('zone').value;
+                const tweet_url = document.getElementById('tweetUrl').value;
+                const caption = document.getElementById('caption').value;
+                const fileInput = document.getElementById('imageFile');
+                const file = fileInput.files[0];
+
+                let imageUrl = '';
+                if (file) {
+                    const fileName = `${Date.now()}_${file.name}`;
+                    const { data: uploadData, error: uploadError } = await sbClient.storage
+                        .from('giveaways')
+                        .upload(fileName, file);
+
+                    if (uploadError) throw new Error('อัปโหลดรูปไม่สำเร็จ: ' + uploadError.message);
+
+                    const { data: publicUrlData } = sbClient.storage
+                        .from('giveaways')
+                        .getPublicUrl(fileName);
+
+                    imageUrl = publicUrlData.publicUrl;
+                }
+
+                const id = Date.now();
+                const { error: insertError } = await sbClient.from('giveaways').insert([{
+                    id, twitter_handle, zone, tweet_url, image_url: imageUrl, caption, status: 'กำลังแจก'
+                }]);
+
+                if (insertError) throw new Error(insertError.message);
+
                 closeAddModal();
-                document.getElementById('giveawayForm').reset(); // แก้ไขวงเล็บให้ถูกต้องแล้ว
+                document.getElementById('giveawayForm').reset();
                 showPopup('สำเร็จ', 'ลงทะเบียนของแจกเรียบร้อยแล้ว!', '🎉');
                 fetchGiveaways();
+            } catch (err) {
+                showPopup('เกิดข้อผิดพลาด', err.message, '❌');
+            } finally {
+                submitBtn.innerText = 'บันทึก';
+                submitBtn.disabled = false;
             }
         }
 

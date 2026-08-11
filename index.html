@@ -264,14 +264,14 @@
                     if (uploadError) throw new Error('อัปโหลดรูปไม่สำเร็จ: ' + uploadError.message);
 
                     const { data: publicUrlData } = sbClient.storage
-                        .from('giveaways')
+                        .from('plli-photo')
                         .getPublicUrl(fileName);
 
                     imageUrl = publicUrlData.publicUrl;
                 }
 
                 const id = Date.now();
-                const { error: insertError } = await sbClient.from('giveaways').insert([{
+                const { error: insertError } = await sbClient.from('plli-photo').insert([{
                     id, twitter_handle, zone, tweet_url, image_url: imageUrl, caption, status: 'กำลังแจก'
                 }]);
 

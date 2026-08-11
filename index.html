@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PLLI Freebie Board - บอร์ดรวมของแจกคอนเสิร์ต</title>
+    <title>PLLI Giveaways </title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -14,7 +14,7 @@
     <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
         <div class="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
             <h1 class="text-xl font-bold bg-gradient-to-r from-indigo-500 to-pink-500 bg-clip-text text-transparent cursor-pointer" onclick="resetFilter()">
-                ✨ PLLI Freebie Board
+                ✨ PLLI Giveaways Board
             </h1>
             
             <div id="auth-section" class="flex items-center space-x-3">
@@ -25,12 +25,12 @@
                 </div>
                 <div id="user-container" class="hidden flex items-center space-x-3">
                     <span id="display-user" class="text-xs font-semibold text-slate-700 bg-slate-100 px-3 py-1.5 rounded-full"></span>
+                    <button onclick="logout()" class="text-xs text-rose-500 hover:underline">ออกจากระบบ</button>
                     <button onclick="filterMyGiveaways()" id="my-giveaway-btn" class="bg-amber-100 text-amber-800 px-3 py-1.5 rounded-full text-xs font-medium hover:bg-amber-200 transition">
                         📌 My Giveaways
                     </button>
-                    <button onclick="logout()" class="text-xs text-rose-500 hover:underline">ออกจากระบบ</button>
                     <button onclick="openAddModal()" class="bg-indigo-600 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-indigo-700 transition">
-                        + ลงทะเบียนของแจก
+                        + ลงทะเบียน กอว.
                     </button>
                 </div>
             </div>
@@ -40,34 +40,30 @@
     <!-- Main Content -->
     <main class="max-w-5xl mx-auto px-4 py-8">
         <div class="text-center mb-8">
-            <h2 class="text-2xl font-bold mb-2">บอร์ดรวบรวมของแจกคอนเสิร์ต PLAVE</h2>
-            <p id="sub-title" class="text-slate-500 text-sm">รวมพิกัดของแจกน่ารักๆ ในคอนเสิร์ต เช็กสถานะ แจกอยู่ หรือ หมดแล้ว ได้ที่นี่!</p>
+            <h2 class="text-2xl font-bold mb-2">บอร์ดรวบรวม giveaway - PLAVE World Tour [KEEP IT MANIC] in BKK</h2>
+            <p id="sub-title" class="text-slate-500 text-sm">💙💜🩷❤️🖤</p>
         </div>
 
         <div id="giveaway-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            <div class="text-center col-span-full py-10 text-slate-400">กำลังโหลดข้อมูลของแจก...</div>
+            <div class="text-center col-span-full py-10 text-slate-400">กำลังโหลดข้อมูล...</div>
         </div>
     </main>
 
     <!-- Modal สำหรับเพิ่มของแจก -->
     <div id="addModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-2xl p-6 max-w-md w-full shadow-xl max-h-[90vh] overflow-y-auto">
-            <h3 class="text-lg font-bold mb-4">ลงทะเบียนของแจกใหม่</h3>
+            <h3 class="text-lg font-bold mb-4">ลงทะเบียน giveway</h3>
             <form id="giveawayForm" onsubmit="addGiveaway(event)" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">โซน / จุดนัดรับ (เช่น โซน A หน้าฮอลล์)</label>
-                    <input type="text" id="zone" required class="w-full px-3 py-2 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">ลิงก์โพสต์ทวีต (X)</label>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Link Twitter</label>
                     <input type="text" id="tweetUrl" placeholder="https://x.com/username/status/..." required class="w-full px-3 py-2 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">อัปโหลดรูปภาพของแจก (สัดส่วน 1:1)</label>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Upload Photo (สัดส่วน 1:1, *ชื่อไฟล์อังกฤษ หรือ ตัวเลข เท่านั้น*)</label>
                     <input type="file" id="imageFile" accept="image/*" required class="w-full px-3 py-2 border rounded-xl text-xs text-slate-500 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">รายละเอียด / แคปชั่น</label>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">รายละเอียด</label>
                     <textarea id="caption" rows="3" placeholder="พิมพ์รายละเอียดของแจกหรือเงื่อนไขการรับที่นี่..." required class="w-full px-3 py-2 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
                 </div>
                 <div class="flex justify-end space-x-2 pt-2">
@@ -75,6 +71,14 @@
                     <button type="submit" id="submitBtn" class="px-4 py-2 text-sm bg-indigo-600 text-white font-medium rounded-xl hover:bg-indigo-700">บันทึก</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Modal สำหรับขยายดูรูปภาพใหญ่ (Lightbox) -->
+    <div id="imageModal" class="fixed inset-0 bg-black/80 hidden flex items-center justify-center p-4 z-50" onclick="closeImageModal()">
+        <div class="relative max-w-3xl max-h-[90vh] w-full flex items-center justify-center" onclick="event.stopPropagation()">
+            <button onclick="closeImageModal()" class="absolute -top-10 right-0 text-white text-xl font-bold bg-white/20 hover:bg-white/40 w-8 h-8 rounded-full flex items-center justify-center transition">✕</button>
+            <img id="modalImage" src="" alt="Zoomed Freebie" class="max-w-full max-h-[85vh] object-contain rounded-xl shadow-2xl">
         </div>
     </div>
 
@@ -106,6 +110,15 @@
 
         function closePopup() {
             document.getElementById('customPopup').classList.add('hidden');
+        }
+
+        function openImageModal(url) {
+            document.getElementById('modalImage').src = url;
+            document.getElementById('imageModal').classList.remove('hidden');
+        }
+
+        function closeImageModal() {
+            document.getElementById('imageModal').classList.add('hidden');
         }
 
         async function checkUser() {
@@ -186,11 +199,11 @@
                                 </span>
                             </div>
 
-                            <!-- รูปภาพสัดส่วน 1:1 ของผู้ใช้ -->
-                            <div class="w-full aspect-square bg-slate-100 relative overflow-hidden flex items-center justify-center border-y border-slate-100">
-                                <img src="${imageUrl}" alt="Freebie Image" class="w-full h-full object-cover">
-                                <div class="absolute bottom-2 left-2 bg-black/60 backdrop-blur-md text-white text-[10px] px-2.5 py-1 rounded-lg">
-                                    📍 ${item.zone}
+                            <!-- รูปภาพสัดส่วน 1:1 (คลิกเพื่อขยายดูรูปใหญ่ได้) -->
+                            <div class="w-full aspect-square bg-slate-100 relative overflow-hidden flex items-center justify-center border-y border-slate-100 cursor-pointer group" onclick="openImageModal('${imageUrl}')">
+                                <img src="${imageUrl}" alt="Freebie Image" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                                <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs font-medium">
+                                    🔍 คลิกเพื่อดูรูปใหญ่
                                 </div>
                             </div>
 
@@ -248,7 +261,6 @@
 
             try {
                 const twitter_handle = currentUser;
-                const zone = document.getElementById('zone').value;
                 const tweet_url = document.getElementById('tweetUrl').value;
                 const caption = document.getElementById('caption').value;
                 const fileInput = document.getElementById('imageFile');
@@ -257,7 +269,6 @@
                 let imageUrl = '';
                 if (file) {
                     const fileName = `${Date.now()}_${file.name}`;
-                    // ใช้ชื่อ Bucket เป็น plli-photo ตามที่คุณตั้งใน Supabase
                     const { data: uploadData, error: uploadError } = await sbClient.storage
                         .from('plli-photo')
                         .upload(fileName, file);
@@ -272,9 +283,8 @@
                 }
 
                 const id = Date.now();
-                // บันทึกข้อมูลลงตาราง giveaways
                 const { error: insertError } = await sbClient.from('giveaways').insert([{
-                    id, twitter_handle, zone, tweet_url, image_url: imageUrl, caption, status: 'กำลังแจก'
+                    id, twitter_handle, tweet_url, image_url: imageUrl, caption, status: 'กำลังแจก'
                 }]);
 
                 if (insertError) throw new Error(insertError.message);

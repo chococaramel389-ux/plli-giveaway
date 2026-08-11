@@ -92,6 +92,7 @@
         </div>
     </div>
 
+    
     <script>
         const SUPABASE_URL = 'https://xrpifshmpqpotalzqjsw.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhycGlmc2htcHFwb3RhbHpxanN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYzNzUyNTQsImV4cCI6MjEwMTk1MTI1NH0.lsLrVMib26Rgg32mLAr8ZHpoV-qmMmy8KPD6J1e-FSs';
@@ -196,6 +197,7 @@
                                 <span class="text-xs font-bold text-slate-700">${item.twitter_handle}</span>
                                 <span onclick="toggleStatus(${item.id}, '${item.twitter_handle}', '${item.status}')" class="px-2.5 py-1 rounded-full text-xs font-medium ${isOwner ? 'cursor-pointer hover:opacity-80 shadow-sm' : 'cursor-default'} ${item.status === 'หมดแล้ว' ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}">
                                     ${item.status === 'หมดแล้ว' ? '🔴 หมดแล้ว' : '🟢 กำลังแจก'} ${isOwner ? '⚙️' : ''}
+                                    ${isOwner ? `<button onclick="deleteGiveaway(${item.id}, '${item.twitter_handle}')" class="ml-2 px-2 py-1 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-lg text-xs transition" title="ลบการ์ด">🗑️</button>` : ''}
                                 </span>
                             </div>
 
@@ -321,6 +323,28 @@
             }
         }
 
+async function deleteGiveaway(id, itemOwner) {
+    if (!currentUser) {
+        showPopup('แจ้งเตือน', 'กรุณาเข้าสู่ระบบก่อนลบรายการ', '⚠️');
+        return;
+    }
+    if (currentUser !== itemOwner) {
+        showPopup('ไม่อนุญาต', 'คุณสามารถลบได้เฉพาะของที่คุณเป็นเจ้าของเท่านั้น!', '🔒');
+        return;
+    }
+    
+    // ยืนยันการลบ
+    if (!confirm('คุณต้องการลบรายการนี้ใช่หรือไม่?')) return;
+
+    const { error } = await sbClient.from('giveaways').delete().eq('id', id);
+    if (error) {
+        showPopup('เกิดข้อผิดพลาด', error.message, '❌');
+    } else {
+        showPopup('สำเร็จ', 'ลบรายการเรียบร้อยแล้ว', '🗑️');
+        fetchGiveaways();
+    }
+}
+        
         checkUser();
         fetchGiveaways();
     </script>

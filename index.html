@@ -257,8 +257,9 @@
                 let imageUrl = '';
                 if (file) {
                     const fileName = `${Date.now()}_${file.name}`;
+                    // ใช้ชื่อ Bucket เป็น plli-photo ตามที่คุณตั้งใน Supabase
                     const { data: uploadData, error: uploadError } = await sbClient.storage
-                        .from('giveaways')
+                        .from('plli-photo')
                         .upload(fileName, file);
 
                     if (uploadError) throw new Error('อัปโหลดรูปไม่สำเร็จ: ' + uploadError.message);
@@ -271,7 +272,8 @@
                 }
 
                 const id = Date.now();
-                const { error: insertError } = await sbClient.from('plli-photo').insert([{
+                // บันทึกข้อมูลลงตาราง giveaways
+                const { error: insertError } = await sbClient.from('giveaways').insert([{
                     id, twitter_handle, zone, tweet_url, image_url: imageUrl, caption, status: 'กำลังแจก'
                 }]);
 

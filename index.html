@@ -173,9 +173,9 @@
 
             if (showingOnlyMine) {
                 dataToRender = allGiveaways.filter(item => item.twitter_handle === currentUser);
-                document.getElementById('sub-title').innerText = `แสดงเฉพาะของแจกของคุณ (${currentUser})`;
+                document.getElementById('sub-title').innerText = `แสดงเฉพาะของคุณ (${currentUser})`;
             } else {
-                document.getElementById('sub-title').innerText = 'รวมพิกัดของแจกน่ารักๆ ในคอนเสิร์ต เช็กสถานะ แจกอยู่ หรือ หมดแล้ว ได้ที่นี่!';
+                //document.getElementById('sub-title').innerText = 'รวมพิกัดของแจกน่ารักๆ ในคอนเสิร์ต เช็กสถานะ แจกอยู่ หรือ หมดแล้ว ได้ที่นี่!';
             }
 
             if (!dataToRender || dataToRender.length === 0) {
@@ -291,7 +291,7 @@
 
                 closeAddModal();
                 document.getElementById('giveawayForm').reset();
-                showPopup('สำเร็จ', 'ลงทะเบียนของแจกเรียบร้อยแล้ว!', '🎉');
+                showPopup('สำเร็จ', 'ลงทะเบียนเรียบร้อยแล้ว!', '🎉');
                 fetchGiveaways();
             } catch (err) {
                 showPopup('เกิดข้อผิดพลาด', err.message, '❌');
@@ -307,7 +307,7 @@
                 return;
             }
             if (currentUser !== itemOwner) {
-                showPopup('ไม่อนุญาต', 'คุณสามารถเปลี่ยนสถานะได้เฉพาะของแจกที่คุณเป็นเจ้าของเท่านั้น!', '🔒');
+                showPopup('ไม่อนุญาต', 'คุณสามารถเปลี่ยนสถานะได้เฉพาะของที่คุณเป็นเจ้าของเท่านั้น!', '🔒');
                 return;
             }
 

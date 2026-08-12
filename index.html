@@ -169,65 +169,63 @@
         }
 
         function renderGiveaways() {
-            const grid = document.getElementById('giveaway-grid');
-            let dataToRender = allGiveaways;
+    const grid = document.getElementById('giveaway-grid');
+    let dataToRender = allGiveaways;
+    if (showingOnlyMine) {
+        dataToRender = allGiveaways.filter(item => item.twitter_handle === currentUser);
+        document.getElementById('sub-title').innerText = `แสดงเฉพาะของคุณ (${currentUser})`;
+    } else {
+        document.getElementById('sub-title').innerText = '💙💜🩷❤️🖤';
+    }
 
-            if (showingOnlyMine) {
-                dataToRender = allGiveaways.filter(item => item.twitter_handle === currentUser);
-                document.getElementById('sub-title').innerText = `แสดงเฉพาะของคุณ (${currentUser})`;
-            } else {
-                document.getElementById('sub-title').innerText = '💙💜🩷❤️🖤';
-            }
+    if (!dataToRender || dataToRender.length === 0) {
+        grid.innerHTML = `<div class="text-center col-span-full py-10 text-slate-400">ยังไม่มีรายการของแจกในขณะนี้</div>`;
+        return;
+    }
 
-            if (!dataToRender || dataToRender.length === 0) {
-                grid.innerHTML = `<div class="text-center col-span-full py-10 text-slate-400">ยังไม่มีรายการของแจกในขณะนี้</div>`;
-                return;
-            }
-
-            grid.innerHTML = dataToRender.map(item => {
-                const isOwner = (currentUser && item.twitter_handle === currentUser);
-                const imageUrl = item.image_url || 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=500&auto=format&fit=crop&q=60';
-                const captionText = item.caption || '💙💜🩷❤️🖤';
-
-                return `
-                    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between overflow-hidden hover:shadow-md transition">
-                        <div>
-                            <!-- Header การ์ด -->
-                            <!-- Header การ์ด -->
-<div class="p-4 pb-2 flex justify-between items-center">
-    <span class="text-xs font-bold text-slate-700">${item.twitter_handle}</span>
-    <div class="flex items-center space-x-1.5">
-        <span onclick="toggleStatus(${item.id}, '${item.twitter_handle}', '${item.status}')" class="px-2.5 py-1 rounded-full text-xs font-medium ${isOwner ? 'cursor-pointer hover:opacity-80 shadow-sm' : 'cursor-default'} ${item.status === 'หมดแล้ว' ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}">
-            ${item.status === 'หมดแล้ว' ? '🔴 หมดแล้ว' : '🟢 กำลังแจก'} ${isOwner ? '⚙️' : ''}
-        </span>
-        ${isOwner ? `<button onclick="deleteGiveaway(${item.id}, '${item.twitter_handle}')" class="px-2 py-1 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-lg text-xs transition" title="ลบการ์ด">🗑️</button>` : ''}
-    </div>
-</div>
-
-                            <!-- รูปภาพสัดส่วน 1:1 (คลิกเพื่อขยายดูรูปใหญ่ได้) -->
-                            <div class="w-full aspect-square bg-slate-100 relative overflow-hidden flex items-center justify-center border-y border-slate-100 cursor-pointer group" onclick="openImageModal('${imageUrl}')">
-                                <img src="${imageUrl}" alt="Freebie Image" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-                                <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs font-medium">
-                                    🔍 คลิกเพื่อดูรูปใหญ่
-                                </div>
-                            </div>
-
-                            <!-- แคปชั่นรายละเอียด -->
-                            <div class="p-4 text-xs text-slate-600 line-clamp-2">
-                                ${captionText}
-                            </div>
-                        </div>
-
-                        <!-- Footer ลิงก์ทวีตต้นฉบับ -->
-                        <div class="px-4 pb-4 pt-1">
-                            <a href="${item.tweet_url}" target="_blank" class="block w-full py-2 bg-slate-50 hover:bg-slate-100 text-indigo-600 text-center text-xs font-semibold rounded-xl transition border border-slate-100">
-                                🔗 ไปที่โพสต์ต้นฉบับบน X
-                            </a>
+    grid.innerHTML = dataToRender.map(item => {
+        const isOwner = (currentUser && item.twitter_handle === currentUser);
+        const imageUrl = item.image_url || 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=500&auto=format&fit=crop&q=60';
+        const captionText = item.caption || '💙💜🩷❤️🖤';
+        
+        return `
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between overflow-hidden hover:shadow-md transition">
+                <div>
+                    <!-- Header การ์ด -->
+                    <div class="p-4 pb-2 flex justify-between items-center">
+                        <span class="text-xs font-bold text-slate-700">${item.twitter_handle}</span>
+                        <div class="flex items-center space-x-1.5">
+                            <span onclick="toggleStatus(${item.id}, '${item.twitter_handle}', '${item.status}')" class="px-2.5 py-1 rounded-full text-xs font-medium ${isOwner ? 'cursor-pointer hover:opacity-80 shadow-sm' : 'cursor-default'} ${item.status === 'หมดแล้ว' ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}">
+                                ${item.status === 'หมดแล้ว' ? '🔴 หมดแล้ว' : '🟢 กำลังแจก'} ${isOwner ? '⚙️' : ''}
+                            </span>
+                            ${isOwner ? `<button onclick="deleteGiveaway(${item.id}, '${item.twitter_handle}')" class="px-2 py-1 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-lg text-xs transition" title="ลบการ์ด">🗑️</button>` : ''}
                         </div>
                     </div>
-                `;
-            }).join('');
-        }
+
+                    <!-- รูปภาพสัดส่วน 1:1 -->
+                    <div class="w-full aspect-square bg-slate-100 relative overflow-hidden flex items-center justify-center border-y border-slate-100 cursor-pointer group" onclick="openImageModal('${imageUrl}')">
+                        <img src="${imageUrl}" alt="Freebie Image" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                        <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs font-medium">
+                            🔍 คลิกเพื่อดูรูปใหญ่
+                        </div>
+                    </div>
+
+                    <!-- แคปชั่นรายละเอียด -->
+                    <div class="p-4 text-xs text-slate-600 line-clamp-2">
+                        ${captionText}
+                    </div>
+                </div>
+
+                <!-- Footer ลิงก์ทวีตต้นฉบับ -->
+                <div class="px-4 pb-4 pt-1">
+                    <a href="${item.tweet_url}" target="_blank" class="block w-full py-2 bg-slate-50 hover:bg-slate-100 text-indigo-600 text-center text-xs font-semibold rounded-xl transition border border-slate-100">
+                        🔗 ไปที่โพสต์ต้นฉบับบน X
+                    </a>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
 
         function filterMyGiveaways() {
             if (!currentUser) {

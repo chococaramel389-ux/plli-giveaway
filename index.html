@@ -257,18 +257,18 @@
             }
             renderGiveaways();
         }*/
-        // อัปเดตหน้าจอของฉัน
+   // ฟังก์ชันดูของฉัน
 function filterMyGiveaways() {
     showingOnlyMine = true;
     updateToggleButtonText();
-    renderGiveaways();
+    fetchGiveaways(); // ใช้ fetchGiveaways ตามโครงสร้างเดิมของคุณ
 }
 
-        // อัปเดตกลับหน้าหลัก
+    // ฟังก์ชันกลับหน้าหลัก
 function resetFilter() {
     showingOnlyMine = false;
     updateToggleButtonText();
-    renderGiveaways();
+    fetchGiveaways(); // ใช้ fetchGiveaways ตามโครงสร้างเดิมของคุณ
     const dropdown = document.getElementById('userDropdown');
     if (dropdown) dropdown.classList.add('hidden');
 }
@@ -428,21 +428,20 @@ window.addEventListener('click', function() {
     }
 });
 
-        // เพิ่มตัวแปรเช็คสถานะ (ถ้ายังไม่มี)
+        // เพิ่มตัวแปรเช็คสถานะ 
 let showingOnlyMine = false;
 
-// ฟังก์ชันสลับโหมดเวลากดปุ่มใน Dropdown (แก้ตรงนี้)
+// ฟังก์ชันสลับโหมดเวลากดปุ่มใน Dropdown
 function toggleViewMode() {
     if (showingOnlyMine) {
         resetFilter(); 
     } else {
         filterMyGiveaways(); 
     }
-    // ใช้คำสั่งซ่อน dropdown ตรงๆ ป้องกัน Error เรื่อง event
     const dropdown = document.getElementById('userDropdown');
     if (dropdown) dropdown.classList.add('hidden');
 }
-// ฟังก์ชันสำหรับเปลี่ยนข้อความบนปุ่มใน Dropdown ตามสถานะปัจจุบัน
+// ฟังก์ชันเปลี่ยนข้อความบนปุ่มตามสถานะปัจจุบัน
 function updateToggleButtonText() {
     const btnText = document.getElementById('toggle-view-text');
     if (btnText) {

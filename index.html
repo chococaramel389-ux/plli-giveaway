@@ -35,9 +35,9 @@
             
             <!-- กล่อง Dropdown เมนู -->
 <div id="userDropdown" class="absolute right-0 mt-2 w-44 bg-white border border-slate-100 rounded-2xl shadow-lg hidden py-1.5 z-50">
-    <!-- ปรับตรงนี้เพิ่ม event.stopPropagation() เพื่อให้ปุ่มทำงานแม่นยำขึ้น -->
-    <button type="button" onclick="event.stopPropagation(); filterMyGiveaways(); toggleDropdown(event);" class="w-full text-left px-4 py-2.5 text-xs text-slate-700 hover:bg-slate-50 font-medium transition flex items-center space-x-2 border-b border-slate-100">
-        <span>📌 my giveaway ของฉัน</span>
+    <!-- ปุ่มสลับโหมด: จะสลับข้อความและฟังก์ชันให้อัตโนมัติ -->
+    <button type="button" id="toggle-view-btn" onclick="event.stopPropagation(); toggleViewMode();" class="w-full text-left px-4 py-2.5 text-xs text-slate-700 hover:bg-slate-50 font-medium transition flex items-center space-x-2 border-b border-slate-100">
+        <span id="toggle-view-text">📌 ของฉัน</span>
     </button>
     <button type="button" onclick="event.stopPropagation(); logout();" class="w-full text-left px-4 py-2.5 text-xs text-rose-600 hover:bg-rose-50 font-medium transition flex items-center space-x-2">
         <span>🚪 ออกจากระบบ</span>
@@ -257,16 +257,21 @@
             }
             renderGiveaways();
         }*/
-        function filterMyGiveaways() {
-    showingOnlyMine = true; // เปิดโหมดดูเฉพาะของฉัน
-    renderGiveaways();      // สั่งให้เรนเดอร์หน้าจอใหม่
-    toggleDropdown(event);  // ปิดเมนูหลังจากกด
+        // อัปเดตหน้าจอของฉัน
+function filterMyGiveaways() {
+    showingOnlyMine = true;
+    updateToggleButtonText();
+    renderGiveaways();
 }
 
-        function resetFilter() {
-            showingOnlyMine = false;
-            renderGiveaways();
-        }
+        // อัปเดตกลับหน้าหลัก
+function resetFilter() {
+    showingOnlyMine = false;
+    updateToggleButtonText();
+    renderGiveaways();
+    const dropdown = document.getElementById('userDropdown');
+    if (dropdown) dropdown.classList.add('hidden');
+}
 
         function openAddModal() { 
             if (!currentUser) {
@@ -422,6 +427,31 @@ window.addEventListener('click', function() {
         dropdown.classList.add('hidden');
     }
 });
+
+        // เพิ่มตัวแปรเช็คสถานะ (ถ้ายังไม่มี)
+let showingOnlyMine = false;
+
+// ฟังก์ชันสลับโหมดเวลากดปุ่มใน Dropdown
+function toggleViewMode() {
+    if (showingOnlyMine) {
+        resetFilter(); // ถ้าอยู่หน้าของฉัน ให้กลับหน้าหลัก
+    } else {
+        filterMyGiveaways(); // ถ้าอยู่หน้าหลัก ให้ไปหน้าของฉัน
+    }
+    toggleDropdown(event); // ปิดดรอปดาวน์หลังกด
+}
+// ฟังก์ชันสำหรับเปลี่ยนข้อความบนปุ่มใน Dropdown ตามสถานะปัจจุบัน
+function updateToggleButtonText() {
+    const btnText = document.getElementById('toggle-view-text');
+    if (btnText) {
+        if (showingOnlyMine) {
+            btnText.innerHTML = "🏠 กลับหน้าหลัก";
+        } else {
+            btnText.innerHTML = "📌 ของฉัน";
+        }
+    }
+}
+        
         
         checkUser();
         fetchGiveaways();

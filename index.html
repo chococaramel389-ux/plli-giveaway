@@ -192,15 +192,15 @@
             <div class="bg-white rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between overflow-hidden hover:shadow-md transition">
                 <div>
                     <!-- Header การ์ด -->
-                    <div class="p-4 pb-2 flex justify-between items-center">
-                        <span class="text-xs font-bold text-slate-700">${item.twitter_handle}</span>
-                        <div class="flex items-center space-x-1.5">
-                            <span onclick="toggleStatus(${item.id}, '${item.twitter_handle}', '${item.status}')" class="px-2.5 py-1 rounded-full text-xs font-medium ${isOwner ? 'cursor-pointer hover:opacity-80 shadow-sm' : 'cursor-default'} ${item.status === 'หมดแล้ว' ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}">
-                                ${item.status === 'หมดแล้ว' ? '🔴 หมดแล้ว' : '🟢 กำลังแจก'} ${isOwner ? '⚙️' : ''}
-                            </span>
-                            ${isOwner ? `<button onclick="deleteGiveaway(${item.id}, '${item.twitter_handle}')" class="px-2 py-1 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-lg text-xs transition" title="ลบการ์ด">🗑️</button>` : ''}
-                        </div>
-                    </div>
+<div class="p-4 pb-2 flex justify-between items-center">
+    <span class="text-xs font-bold text-slate-700">${item.twitter_handle}</span>
+    <div class="flex items-center space-x-1.5">
+        <button type="button" onclick="toggleStatus(${item.id}, '${item.twitter_handle}', '${item.status}')" class="px-2.5 py-1 rounded-full text-xs font-medium ${isOwner ? 'cursor-pointer hover:opacity-80 shadow-sm' : 'cursor-default'} ${item.status === 'หมดแล้ว' ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}">
+            ${item.status === 'หมดแล้ว' ? '🔴 หมดแล้ว' : '🟢 กำลังแจก'} ${isOwner ? '⚙️' : ''}
+        </button>
+        ${isOwner ? `<button type="button" onclick="deleteGiveaway(${item.id}, '${item.twitter_handle}')" class="px-2 py-1 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-lg text-xs transition" title="ลบการ์ด">🗑️</button>` : ''}
+    </div>
+</div>
 
                     <!-- รูปภาพสัดส่วน 1:1 -->
                     <div class="w-full aspect-square bg-slate-100 relative overflow-hidden flex items-center justify-center border-y border-slate-100 cursor-pointer group" onclick="openImageModal('${imageUrl}')">

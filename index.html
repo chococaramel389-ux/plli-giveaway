@@ -224,16 +224,33 @@
                 return `
                     <div class="bg-white rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between overflow-hidden hover:shadow-md transition">
                         <div>
-                            <!-- Header การ์ด -->
-                            <div class="p-4 pb-2 flex justify-between items-center">
-                                <span class="text-xs font-bold text-slate-700">${item.twitter_handle}</span>
-                                <div class="flex items-center space-x-1.5">
-                                    <button type="button" onclick="toggleStatus(${item.id}, '${item.twitter_handle}', '${item.status}')" class="px-2.5 py-1 rounded-full text-xs font-medium ${isOwner ? 'cursor-pointer hover:opacity-80 shadow-sm' : 'cursor-default'} ${item.status === 'หมดแล้ว' ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}">
-                                        ${item.status === 'หมดแล้ว' ? '🔴 หมดแล้ว' : '🟢 กำลังแจก'} ${isOwner ? '⚙️' : ''}
-                                    </button>
-                                    ${isOwner ? `<button type="button" onclick="deleteGiveaway(${item.id}, '${item.twitter_handle}')" class="px-2 py-1 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-lg text-xs transition" title="ลบการ์ด">🗑️</button>` : ''}
-                                </div>
-                            </div>
+                            // ส่วน Header การ์ดใน renderGiveaways()
+<div class="p-4 pb-2 flex justify-between items-center relative">
+    <span class="text-xs font-bold text-slate-700">${item.twitter_handle}</span>
+    <div class="flex items-center space-x-1.5">
+        <button type="button" onclick="toggleStatus(${item.id}, '${item.twitter_handle}', '${item.status}')" class="px-2.5 py-1 rounded-full text-xs font-medium ${isOwner ? 'cursor-pointer hover:opacity-80 shadow-sm' : 'cursor-default'} ${item.status === 'หมดแล้ว' ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}">
+            ${item.status === 'หมดแล้ว' ? '🔴 หมดแล้ว' : '🟢 กำลังแจก'} ${isOwner ? '⚙️' : ''}
+        </button>
+        
+        <!-- ปุ่มจุดสามจุดสำหรับเจ้าของโพสต์ -->
+        ${isOwner ? `
+            <div class="relative">
+                <button type="button" onclick="toggleCardDropdown(event, ${item.id})" class="w-7 h-7 flex items-center justify-center rounded-full hover:bg-slate-100 text-slate-500 transition text-xs font-bold">
+                    ⋮
+                </button>
+                <!-- กล่องเมนูดรอปดาวน์ของการ์ด -->
+                <div id="cardDropdown-${item.id}" class="card-dropdown hidden absolute right-0 mt-1 w-32 bg-white border border-slate-100 rounded-xl shadow-lg py-1 z-30">
+                    <button type="button" onclick="openEditModal(${item.id})" class="w-full text-left px-3 py-2 text-xs text-slate-700 hover:bg-slate-50 flex items-center space-x-1.5 border-b border-slate-100">
+                        <span>✏️ แก้ไข</span>
+                    </button>
+                    <button type="button" onclick="deleteGiveaway(${item.id}, '${item.twitter_handle}')" class="w-full text-left px-3 py-2 text-xs text-rose-600 hover:bg-rose-50 flex items-center space-x-1.5">
+                        <span>🗑️ ลบ</span>
+                    </button>
+                </div>
+            </div>
+        ` : ''}
+    </div>
+</div>
                             
                             <!-- รูปภาพสัดส่วน 1:1 -->
                             <div class="w-full aspect-square bg-slate-100 relative overflow-hidden flex items-center justify-center border-y border-slate-100 cursor-pointer group" onclick="openImageModal('${imageUrl}')">
@@ -411,12 +428,30 @@
             if (actionArea) actionArea.remove();
         }
 
-        function toggleDropdown(event) {
-            event.stopPropagation();
-            const dropdown = document.getElementById('userDropdown');
-            dropdown.classList.toggle('hidden');
-        }
+        // ฟังก์ชันเปิด/ปิดเมนูดรอปดาวน์เฉพาะการ์ดนั้นๆ
+function toggleCardDropdown(event, id) {
+    event.stopPropagation();
+    // ปิดดรอปดาวน์อันอื่นๆ ที่อาจเปิดค้างไว้ก่อน
+    document.querySelectorAll('.card-dropdown').forEach(el => {
+        if (el.id !== `cardDropdown-${id}`) el.classList.add('hidden');
+    });
+    
+    const dropdown = document.getElementById(`cardDropdown-${id}`);
+    if (dropdown) {
+        dropdown.classList.toggle('hidden');
+    }
+}
 
+// อัปเดตอีเวนต์คลิกเพื่อปิดดรอปดาวน์เวลาคลิกพื้นที่ว่าง
+window.addEventListener('click', function() {
+    document.querySelectorAll('.card-dropdown').forEach(el => {
+        el.classList.add('hidden');
+    });
+    const dropdown = document.getElementById('userDropdown');
+    if (dropdown && !dropdown.classList.contains('hidden')) {
+        dropdown.classList.add('hidden');
+    }
+});
         window.addEventListener('click', function() {
             const dropdown = document.getElementById('userDropdown');
             if (dropdown && !dropdown.classList.contains('hidden')) {

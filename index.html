@@ -3,63 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PLLI Giveaways </title>
+    <title>PLLI Giveaways</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style> body { font-family: 'Prompt', sans-serif; } </style>
+    <style>
+        body { font-family: 'Prompt', sans-serif; }
+    </style>
     <link rel="icon" type="image/png" href="https://img.icons8.com/?size=100&id=VVRMVduP5ewo&format=png&color=000000">
 </head>
 <body class="bg-slate-50 min-h-screen text-slate-800">
-    <!-- Header -->
-<header class="bg-white border-b border-slate-200 sticky top-0 z-50">
-    <div class="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
-        <h1 class="text-xl font-bold bg-gradient-to-r from-indigo-500 to-pink-500 bg-clip-text text-transparent cursor-pointer" onclick="resetFilter()">
-            ✨ #PLLIมาแจก
-        </h1>
-        <div id="auth-section" class="flex items-center space-x-3">
-    <div id="login-container">
-        <button onclick="loginWithTwitter()" class="bg-black text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-slate-800 transition flex items-center space-x-2">
-            <span>เข้าสู่ระบบด้วย X</span>
-        </button>
-    </div>
-    
-    <!-- ส่วนแสดงชื่อและ Dropdown เมนู (รวม My Giveaway + ออกจากระบบ) -->
-    <div id="user-container" class="hidden relative flex items-center space-x-2">
-        <div class="relative">
-            <!-- ปุ่มชื่อแอคเคาท์ สำหรับกดเปิด/ปิด Dropdown -->
-            <button type="button" onclick="toggleDropdown(event)" class="flex items-center space-x-1.5 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-full max-w-[150px] sm:max-w-none transition text-slate-700">
-                <span id="display-user" class="text-[11px] sm:text-xs font-semibold truncate"></span>
-                <span class="text-slate-400 text-[10px]">▼</span>
-            </button>
-            
-            <!-- กล่อง Dropdown เมนู -->
-<div id="userDropdown" class="absolute right-0 mt-2 w-44 bg-white border border-slate-100 rounded-2xl shadow-lg hidden py-1.5 z-50">
-    <!-- ปุ่มสลับโหมด: จะสลับข้อความและฟังก์ชันให้อัตโนมัติ -->
-    <button type="button" id="toggle-view-btn" onclick="event.stopPropagation(); toggleViewMode();" class="w-full text-left px-4 py-2.5 text-xs text-slate-700 hover:bg-slate-50 font-medium transition flex items-center space-x-2 border-b border-slate-100">
-        <span id="toggle-view-text">📌 ของฉัน</span>
-    </button>
-    <button type="button" onclick="event.stopPropagation(); logout();" class="w-full text-left px-4 py-2.5 text-xs text-rose-600 hover:bg-rose-50 font-medium transition flex items-center space-x-2">
-        <span>🚪 ออกจากระบบ</span>
-    </button>
-</div>
-        </div>
 
-        <button onclick="openAddModal()" class="bg-indigo-600 text-white px-3 sm:px-4 py-2 rounded-full text-[11px] sm:text-sm font-medium hover:bg-indigo-700 transition flex-shrink-0">
-            + ลงทะเบียน กอว.
-        </button>
-    </div>
-</div>
-    </div>
-</header>
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold bg-gradient-to-r from-indigo-500 to-pink-500 bg-clip-text text-transparent cursor-pointer" onclick="resetFilter()">
+                ✨ #PLLIมาแจก
+            </h1>
+            <div id="auth-section" class="flex items-center space-x-3">
+                <div id="login-container">
+                    <button onclick="loginWithTwitter()" class="bg-black text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-slate-800 transition flex items-center space-x-2">
+                        <span>เข้าสู่ระบบด้วย X</span>
+                    </button>
+                </div>
+                
+                <!-- ส่วนแสดงชื่อและ Dropdown เมนู (รวม My Giveaway + ออกจากระบบ) -->
+                <div id="user-container" class="hidden relative flex items-center space-x-2">
+                    <div class="relative">
+                        <!-- ปุ่มชื่อแอคเคาท์ สำหรับกดเปิด/ปิด Dropdown -->
+                        <button type="button" onclick="toggleDropdown(event)" class="flex items-center space-x-1.5 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-full max-w-[150px] sm:max-w-none transition text-slate-700">
+                            <span id="display-user" class="text-[11px] sm:text-xs font-semibold truncate"></span>
+                            <span class="text-slate-400 text-[10px]">▼</span>
+                        </button>
+                        
+                        <!-- กล่อง Dropdown เมนู -->
+                        <div id="userDropdown" class="absolute right-0 mt-2 w-44 bg-white border border-slate-100 rounded-2xl shadow-lg hidden py-1.5 z-50">
+                            <!-- ปุ่มสลับโหมด: จะสลับข้อความและฟังก์ชันให้อัตโนมัติ -->
+                            <button type="button" id="toggle-view-btn" onclick="event.stopPropagation(); toggleViewMode();" class="w-full text-left px-4 py-2.5 text-xs text-slate-700 hover:bg-slate-50 font-medium transition flex items-center space-x-2 border-b border-slate-100">
+                                <span id="toggle-view-text">📌 ของฉัน</span>
+                            </button>
+                            <button type="button" onclick="event.stopPropagation(); logout();" class="w-full text-left px-4 py-2.5 text-xs text-rose-600 hover:bg-rose-50 font-medium transition flex items-center space-x-2">
+                                <span>🚪 ออกจากระบบ</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button onclick="openAddModal()" class="bg-indigo-600 text-white px-3 sm:px-4 py-2 rounded-full text-[11px] sm:text-sm font-medium hover:bg-indigo-700 transition flex-shrink-0">
+                        + ลงทะเบียน กอว.
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
 
     <!-- Main Content -->
     <main class="max-w-5xl mx-auto px-4 py-8">
         <div class="text-center mb-8">
             <h2 class="text-2xl font-bold mb-2">#PLLIมาแจก - PLAVE World Tour [KEEP IT MANIC] in BKK</h2>
-            <p id="sub-title" class="text-slate-500 text-sm">💙💜🩷❤️🖤</p> 
+            <p id="sub-title" class="text-slate-500 text-sm">💙💜🩷❤️🖤</p>
         </div>
-
+        
         <div id="giveaway-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             <div class="text-center col-span-full py-10 text-slate-400">กำลังโหลดข้อมูล...</div>
         </div>
@@ -108,7 +111,6 @@
         </div>
     </div>
 
-    
     <script>
         const SUPABASE_URL = 'https://xrpifshmpqpotalzqjsw.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhycGlmc2htcHFwb3RhbHpxanN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYzNzUyNTQsImV4cCI6MjEwMTk1MTI1NH0.lsLrVMib26Rgg32mLAr8ZHpoV-qmMmy8KPD6J1e-FSs';
@@ -185,102 +187,76 @@
         }
 
         function renderGiveaways() {
-    const grid = document.getElementById('giveaway-grid');
-    let dataToRender = allGiveaways;
-    if (showingOnlyMine) {
-        dataToRender = allGiveaways.filter(item => item.twitter_handle === currentUser);
-        document.getElementById('sub-title').innerText = `แสดงเฉพาะของคุณ (${currentUser})`;
-    } else {
-        document.getElementById('sub-title').innerText = '💙💜🩷❤️🖤';
-    }
+            const grid = document.getElementById('giveaway-grid');
+            let dataToRender = allGiveaways;
 
-    if (!dataToRender || dataToRender.length === 0) {
-        grid.innerHTML = `<div class="text-center col-span-full py-10 text-slate-400">ยังไม่มีรายการของแจกในขณะนี้</div>`;
-        return;
-    }
+            if (showingOnlyMine) {
+                dataToRender = allGiveaways.filter(item => item.twitter_handle === currentUser);
+                document.getElementById('sub-title').innerText = `แสดงเฉพาะของคุณ (${currentUser})`;
+            } else {
+                document.getElementById('sub-title').innerText = '💙💜🩷❤️🖤';
+            }
 
-    grid.innerHTML = dataToRender.map(item => {
-        const isOwner = (currentUser && item.twitter_handle === currentUser);
-        const imageUrl = item.image_url || 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=500&auto=format&fit=crop&q=60';
-        const captionText = item.caption || '💙💜🩷❤️🖤';
-        
-        return `
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between overflow-hidden hover:shadow-md transition">
-                <div>
-                    <!-- Header การ์ด -->
-<div class="p-4 pb-2 flex justify-between items-center">
-    <span class="text-xs font-bold text-slate-700">${item.twitter_handle}</span>
-    <div class="flex items-center space-x-1.5">
-        <button type="button" onclick="toggleStatus(${item.id}, '${item.twitter_handle}', '${item.status}')" class="px-2.5 py-1 rounded-full text-xs font-medium ${isOwner ? 'cursor-pointer hover:opacity-80 shadow-sm' : 'cursor-default'} ${item.status === 'หมดแล้ว' ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}">
-            ${item.status === 'หมดแล้ว' ? '🔴 หมดแล้ว' : '🟢 กำลังแจก'} ${isOwner ? '⚙️' : ''}
-        </button>
-        ${isOwner ? `<button type="button" onclick="deleteGiveaway(${item.id}, '${item.twitter_handle}')" class="px-2 py-1 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-lg text-xs transition" title="ลบการ์ด">🗑️</button>` : ''}
-    </div>
-</div>
-
-                    <!-- รูปภาพสัดส่วน 1:1 -->
-                    <div class="w-full aspect-square bg-slate-100 relative overflow-hidden flex items-center justify-center border-y border-slate-100 cursor-pointer group" onclick="openImageModal('${imageUrl}')">
-                        <img src="${imageUrl}" alt="Freebie Image" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-                        <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs font-medium">
-                            🔍 คลิกเพื่อดูรูปใหญ่
-                        </div>
-                    </div>
-
-                    <!-- แคปชั่นรายละเอียด -->
-                    <div class="p-4 text-xs text-slate-600 line-clamp-2">
-                        ${captionText}
-                    </div>
-                </div>
-
-                <!-- Footer ลิงก์ทวีตต้นฉบับ -->
-                <div class="px-4 pb-4 pt-1">
-                    <a href="${item.tweet_url}" target="_blank" class="block w-full py-2 bg-slate-50 hover:bg-slate-100 text-indigo-600 text-center text-xs font-semibold rounded-xl transition border border-slate-100">
-                        🔗 ไปที่โพสต์ต้นฉบับบน X
-                    </a>
-                </div>
-            </div>
-        `;
-    }).join('');
-}
-
-     /*   function filterMyGiveaways() {
-            if (!currentUser) {
-               showPopup('แจ้งเตือน', 'กรุณาเข้าสู่ระบบก่อนดูรายการของคุณ', '⚠️');
+            if (!dataToRender || dataToRender.length === 0) {
+                grid.innerHTML = `<div class="text-center col-span-full py-10 text-slate-400">ยังไม่มีรายการของแจกในขณะนี้</div>`;
                 return;
             }
-            showingOnlyMine = !showingOnlyMine;
-            const btn = document.getElementById('my-giveaway-btn');
-            if (showingOnlyMine) {
-                btn.className = "bg-indigo-600 text-white px-3 py-1.5 rounded-full text-xs font-medium hover:bg-indigo-700 transition shadow-sm";
-            } else {
-                btn.className = "bg-amber-100 text-amber-800 px-3 py-1.5 rounded-full text-xs font-medium hover:bg-amber-200 transition";
-            }
-            renderGiveaways();
-        }*/
-   // ฟังก์ชันดูของฉัน
-function filterMyGiveaways() {
-    showingOnlyMine = true;
-    updateToggleButtonText();
-    fetchGiveaways(); // ใช้ fetchGiveaways ตามโครงสร้างเดิมของคุณ
-}
 
-    // ฟังก์ชันกลับหน้าหลัก
-function resetFilter() {
-    showingOnlyMine = false;
-    updateToggleButtonText();
-    fetchGiveaways(); // ใช้ fetchGiveaways ตามโครงสร้างเดิมของคุณ
-    const dropdown = document.getElementById('userDropdown');
-    if (dropdown) dropdown.classList.add('hidden');
-}
+            grid.innerHTML = dataToRender.map(item => {
+                const isOwner = (currentUser && item.twitter_handle === currentUser);
+                const imageUrl = item.image_url || 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=500&auto=format&fit=crop&q=60';
+                const captionText = item.caption || '💙💜🩷❤️🖤';
 
-        function openAddModal() { 
+                return `
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between overflow-hidden hover:shadow-md transition">
+                        <div>
+                            <!-- Header การ์ด -->
+                            <div class="p-4 pb-2 flex justify-between items-center">
+                                <span class="text-xs font-bold text-slate-700">${item.twitter_handle}</span>
+                                <div class="flex items-center space-x-1.5">
+                                    <button type="button" onclick="toggleStatus(${item.id}, '${item.twitter_handle}', '${item.status}')" class="px-2.5 py-1 rounded-full text-xs font-medium ${isOwner ? 'cursor-pointer hover:opacity-80 shadow-sm' : 'cursor-default'} ${item.status === 'หมดแล้ว' ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}">
+                                        ${item.status === 'หมดแล้ว' ? '🔴 หมดแล้ว' : '🟢 กำลังแจก'} ${isOwner ? '⚙️' : ''}
+                                    </button>
+                                    ${isOwner ? `<button type="button" onclick="deleteGiveaway(${item.id}, '${item.twitter_handle}')" class="px-2 py-1 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-lg text-xs transition" title="ลบการ์ด">🗑️</button>` : ''}
+                                </div>
+                            </div>
+                            
+                            <!-- รูปภาพสัดส่วน 1:1 -->
+                            <div class="w-full aspect-square bg-slate-100 relative overflow-hidden flex items-center justify-center border-y border-slate-100 cursor-pointer group" onclick="openImageModal('${imageUrl}')">
+                                <img src="${imageUrl}" alt="Freebie Image" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                                <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs font-medium">
+                                    🔍 คลิกเพื่อดูรูปใหญ่
+                                </div>
+                            </div>
+
+                            <!-- แคปชั่นรายละเอียด -->
+                            <div class="p-4 text-xs text-slate-600 line-clamp-2">
+                                ${captionText}
+                            </div>
+                        </div>
+
+                        <!-- Footer ลิงก์ทวีตต้นฉบับ -->
+                        <div class="px-4 pb-4 pt-1">
+                            <a href="${item.tweet_url}" target="_blank" class="block w-full py-2 bg-slate-50 hover:bg-slate-100 text-indigo-600 text-center text-xs font-semibold rounded-xl transition border border-slate-100">
+                                🔗 ไปที่โพสต์ต้นฉบับบน X
+                            </a>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function openAddModal() {
             if (!currentUser) {
                 showPopup('แจ้งเตือน', 'กรุณาเข้าสู่ระบบด้วย X ก่อนเพิ่มของแจก', '⚠️');
                 return;
             }
-            document.getElementById('addModal').classList.remove('hidden'); 
+            document.getElementById('addModal').classList.remove('hidden');
         }
-        function closeAddModal() { document.getElementById('addModal').classList.add('hidden'); }
+
+        function closeAddModal() {
+            document.getElementById('addModal').classList.add('hidden');
+        }
 
         async function addGiveaway(e) {
             e.preventDefault();
@@ -294,8 +270,8 @@ function resetFilter() {
                 const caption = document.getElementById('caption').value;
                 const fileInput = document.getElementById('imageFile');
                 const file = fileInput.files[0];
-
                 let imageUrl = '';
+
                 if (file) {
                     const fileName = `${Date.now()}_${file.name}`;
                     const { data: uploadData, error: uploadError } = await sbClient.storage
@@ -307,7 +283,6 @@ function resetFilter() {
                     const { data: publicUrlData } = sbClient.storage
                         .from('plli-photo')
                         .getPublicUrl(fileName);
-
                     imageUrl = publicUrlData.publicUrl;
                 }
 
@@ -331,131 +306,134 @@ function resetFilter() {
         }
 
         async function toggleStatus(id, itemOwner, currentStatus) {
-    if (!currentUser) {
-        showPopup('แจ้งเตือน', 'กรุณาเข้าสู่ระบบก่อนเปลี่ยนสถานะ', '⚠️');
-        return;
-    }
-    if (currentUser !== itemOwner) {
-        showPopup('ไม่อนุญาต', 'คุณสามารถเปลี่ยนสถานะได้เฉพาะของที่คุณเป็นเจ้าของเท่านั้น!', '🔒');
-        return;
-    }
-    const newStatus = currentStatus === 'กำลังแจก' ? 'หมดแล้ว' : 'กำลังแจก';
-    const { error } = await sbClient.from('giveaways').update({ status: newStatus }).eq('id', id);
-    if (error) {
-        showPopup('เกิดข้อผิดพลาด', error.message, '❌');
-    } else {
-        fetchGiveaways();
-    }
-}
+            if (!currentUser) {
+                showPopup('แจ้งเตือน', 'กรุณาเข้าสู่ระบบก่อนเปลี่ยนสถานะ', '⚠️');
+                return;
+            }
+            if (currentUser !== itemOwner) {
+                showPopup('ไม่อนุญาต', 'คุณสามารถเปลี่ยนสถานะได้เฉพาะของที่คุณเป็นเจ้าของเท่านั้น!', '🔒');
+                return;
+            }
 
-// ตัวแปรเก็บค่า ID ชั่วคราวเวลากดปุ่มลบ
-let pendingDeleteId = null;
+            const newStatus = currentStatus === 'กำลังแจก' ? 'หมดแล้ว' : 'กำลังแจก';
+            const { error } = await sbClient.from('giveaways').update({ status: newStatus }).eq('id', id);
 
-function deleteGiveaway(id, itemOwner) {
-    if (!currentUser) {
-        showPopup('แจ้งเตือน', 'กรุณาเข้าสู่ระบบก่อนลบรายการ', '⚠️');
-        return;
-    }
-    if (currentUser !== itemOwner) {
-        showPopup('ไม่อนุญาต', 'คุณสามารถลบได้เฉพาะของที่คุณเป็นเจ้าของเท่านั้น!', '🔒');
-        return;
-    }
-    
-    pendingDeleteId = id;
-    
-    // แสดง Popup ถามยืนยันการลบแบบ Custom Card
-    document.getElementById('popup-title').innerText = 'ยืนยันการลบ';
-    document.getElementById('popup-message').innerText = 'คุณต้องการลบรายการของแจกนี้ใช่หรือไม่?';
-    document.getElementById('popup-icon').innerText = '🗑️';
-    
-    // เปลี่ยนปุ่มใน Popup ให้เป็นปุ่มยืนยันการลบ
-    const popupBox = document.querySelector('#customPopup > div');
-    // เพิ่มปุ่มยืนยันและยกเลิกชั่วคราว
-    let actionArea = document.getElementById('popup-action-area');
-    if (!actionArea) {
-        actionArea = document.createElement('div');
-        actionArea.id = 'popup-action-area';
-        actionArea.className = 'flex space-x-2 mt-4';
-        // แทรกก่อนปุ่มตกลงเดิม
-        const oldBtn = popupBox.querySelector('button');
-        oldBtn.style.display = 'none';
-        popupBox.appendChild(actionArea);
-    }
-    
-    actionArea.innerHTML = `
-        <button onclick="closePopupCustom()" class="w-1/2 py-2.5 bg-slate-100 text-slate-600 text-xs font-semibold rounded-xl hover:bg-slate-200 transition">ยกเลิก</button>
-        <button onclick="confirmDelete()" class="w-1/2 py-2.5 bg-rose-600 text-white text-xs font-semibold rounded-xl hover:bg-rose-700 transition">ยืนยันลบ</button>
-    `;
-    
-    document.getElementById('customPopup').classList.remove('hidden');
-}
+            if (error) {
+                showPopup('เกิดข้อผิดพลาด', error.message, '❌');
+            } else {
+                fetchGiveaways();
+            }
+        }
 
-async function confirmDelete() {
-    if (!pendingDeleteId) return;
-    
-    const { error } = await sbClient.from('giveaways').delete().eq('id', pendingDeleteId);
-    closePopupCustom();
-    
-    if (error) {
-        showPopup('เกิดข้อผิดพลาด', error.message, '❌');
-    } else {
-        showPopup('สำเร็จ', 'ลบรายการเรียบร้อยแล้ว', '🗑️');
-        fetchGiveaways();
-    }
-    pendingDeleteId = null;
-}
+        let pendingDeleteId = null;
 
-function closePopupCustom() {
-    document.getElementById('customPopup').classList.add('hidden');
-    // คืนค่าปุ่มเดิมใน Popup
-    const oldBtn = document.querySelector('#customPopup button');
-    if (oldBtn) oldBtn.style.display = 'block';
-    const actionArea = document.getElementById('popup-action-area');
-    if (actionArea) actionArea.remove();
-}
+        function deleteGiveaway(id, itemOwner) {
+            if (!currentUser) {
+                showPopup('แจ้งเตือน', 'กรุณาเข้าสู่ระบบก่อนลบรายการ', '⚠️');
+                return;
+            }
+            if (currentUser !== itemOwner) {
+                showPopup('ไม่อนุญาต', 'คุณสามารถลบได้เฉพาะของที่คุณเป็นเจ้าของเท่านั้น!', '🔒');
+                return;
+            }
+
+            pendingDeleteId = id;
+            document.getElementById('popup-title').innerText = 'ยืนยันการลบ';
+            document.getElementById('popup-message').innerText = 'คุณต้องการลบรายการของแจกนี้ใช่หรือไม่?';
+            document.getElementById('popup-icon').innerText = '🗑️';
+
+            const popupBox = document.querySelector('#customPopup > div');
+            let actionArea = document.getElementById('popup-action-area');
+            if (!actionArea) {
+                actionArea = document.createElement('div');
+                actionArea.id = 'popup-action-area';
+                actionArea.className = 'flex space-x-2 mt-4';
+                const oldBtn = popupBox.querySelector('button');
+                oldBtn.style.display = 'none';
+                popupBox.appendChild(actionArea);
+            }
+
+            actionArea.innerHTML = `
+                <button onclick="closePopupCustom()" class="w-1/2 py-2.5 bg-slate-100 text-slate-600 text-xs font-semibold rounded-xl hover:bg-slate-200 transition">ยกเลิก</button>
+                <button onclick="confirmDelete()" class="w-1/2 py-2.5 bg-rose-600 text-white text-xs font-semibold rounded-xl hover:bg-rose-700 transition">ยืนยันลบ</button>
+            `;
+            document.getElementById('customPopup').classList.remove('hidden');
+        }
+
+        async function confirmDelete() {
+            if (!pendingDeleteId) return;
+            const { error } = await sbClient.from('giveaways').delete().eq('id', pendingDeleteId);
+            closePopupCustom();
+            if (error) {
+                showPopup('เกิดข้อผิดพลาด', error.message, '❌');
+            } else {
+                showPopup('สำเร็จ', 'ลบรายการเรียบร้อยแล้ว', '🗑️');
+                fetchGiveaways();
+            }
+            pendingDeleteId = null;
+        }
+
+        function closePopupCustom() {
+            document.getElementById('customPopup').classList.add('hidden');
+            const oldBtn = document.querySelector('#customPopup button');
+            if (oldBtn) oldBtn.style.display = 'block';
+            const actionArea = document.getElementById('popup-action-area');
+            if (actionArea) actionArea.remove();
+        }
 
         function toggleDropdown(event) {
-    event.stopPropagation();
-    const dropdown = document.getElementById('userDropdown');
-    dropdown.classList.toggle('hidden');
-}
-
-// กดคลิกที่พื้นที่ว่างส่วนอื่นเพื่อปิด Dropdown
-window.addEventListener('click', function() {
-    const dropdown = document.getElementById('userDropdown');
-    if (dropdown && !dropdown.classList.contains('hidden')) {
-        dropdown.classList.add('hidden');
-    }
-});
-
-        // เพิ่มตัวแปรเช็คสถานะ 
-let showingOnlyMine = false;
-
-// ฟังก์ชันสลับโหมดเวลากดปุ่มใน Dropdown
-function toggleViewMode() {
-    if (showingOnlyMine) {
-        resetFilter(); 
-    } else {
-        filterMyGiveaways(); 
-    }
-    const dropdown = document.getElementById('userDropdown');
-    if (dropdown) dropdown.classList.add('hidden');
-}
-// ฟังก์ชันเปลี่ยนข้อความบนปุ่มตามสถานะปัจจุบัน
-function updateToggleButtonText() {
-    const btnText = document.getElementById('toggle-view-text');
-    if (btnText) {
-        if (showingOnlyMine) {
-            btnText.innerHTML = "🏠 กลับหน้าหลัก";
-        } else {
-            btnText.innerHTML = "📌 ของฉัน";
+            event.stopPropagation();
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('hidden');
         }
-    }
-}
-        
-        
-        checkUser();
-        fetchGiveaways();
+
+        window.addEventListener('click', function() {
+            const dropdown = document.getElementById('userDropdown');
+            if (dropdown && !dropdown.classList.contains('hidden')) {
+                dropdown.classList.add('hidden');
+            }
+        });
+
+        // จัดการโหมดสลับดูของฉัน / หน้าหลัก
+        function toggleViewMode() {
+            if (showingOnlyMine) {
+                resetFilter(); 
+            } else {
+                filterMyGiveaways(); 
+            }
+            const dropdown = document.getElementById('userDropdown');
+            if (dropdown) dropdown.classList.add('hidden');
+        }
+
+        function filterMyGiveaways() {
+            showingOnlyMine = true;
+            updateToggleButtonText();
+            fetchGiveaways();
+        }
+
+        function resetFilter() {
+            showingOnlyMine = false;
+            updateToggleButtonText();
+            fetchGiveaways();
+            const dropdown = document.getElementById('userDropdown');
+            if (dropdown) dropdown.classList.add('hidden');
+        }
+
+        function updateToggleButtonText() {
+            const btnText = document.getElementById('toggle-view-text');
+            if (btnText) {
+                if (showingOnlyMine) {
+                    btnText.innerHTML = "🏠 กลับหน้าหลัก";
+                } else {
+                    btnText.innerHTML = "📌 ของฉัน";
+                }
+            }
+        }
+
+        // เริ่มต้นทำงานโหลดข้อมูลเมื่อเปิดเว็บ
+        checkUser().then(() => {
+            fetchGiveaways();
+        });
     </script>
 </body>
 </html>

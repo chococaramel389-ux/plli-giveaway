@@ -27,7 +27,6 @@
                     </button>
                 </div>
                 
-                <!-- ส่วนแสดงชื่อและ Dropdown เมนู -->
                 <div id="user-container" class="hidden relative flex items-center space-x-2">
                     <div class="relative">
                         <button type="button" onclick="toggleDropdown(event)" class="flex items-center space-x-1.5 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-full max-w-[150px] sm:max-w-none transition text-slate-700">
@@ -65,7 +64,7 @@
         </div>
     </main>
 
-    <!-- Modal สำหรับเพิ่มของแจก -->
+    <!-- Modal เพิ่มของแจก -->
     <div id="addModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-2xl p-6 max-w-md w-full shadow-xl max-h-[90vh] overflow-y-auto">
             <h3 class="text-lg font-bold mb-4">ลงทะเบียน Giveaway</h3>
@@ -102,7 +101,7 @@
         </div>
     </div>
 
-    <!-- Modal สำหรับแก้ไขของแจก -->
+    <!-- Modal แก้ไขของแจก -->
     <div id="editModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-2xl p-6 max-w-md w-full shadow-xl max-h-[90vh] overflow-y-auto">
             <h3 class="text-lg font-bold mb-4">แก้ไข Giveaway</h3>
@@ -136,7 +135,7 @@
         </div>
     </div>
 
-    <!-- Modal สำหรับขยายดูรูปภาพใหญ่ -->
+    <!-- Modal ขยายรูป -->
     <div id="imageModal" class="fixed inset-0 bg-black/80 hidden flex items-center justify-center p-4 z-50" onclick="closeImageModal()">
         <div class="relative max-w-3xl max-h-[90vh] w-full flex items-center justify-center" onclick="event.stopPropagation()">
             <button onclick="closeImageModal()" class="absolute -top-10 right-0 text-white text-xl font-bold bg-white/20 hover:bg-white/40 w-8 h-8 rounded-full flex items-center justify-center transition">✕</button>
@@ -144,7 +143,7 @@
         </div>
     </div>
 
-    <!-- Custom Popup Card -->
+    <!-- Popup แจ้งเตือน -->
     <div id="customPopup" class="fixed inset-0 bg-black/40 hidden flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl text-center transform transition-all">
             <div id="popup-icon" class="text-3xl mb-3">✨</div>
@@ -253,6 +252,8 @@
                 const location = item.location || 'ไม่ระบุสถานที่';
                 const quantity = item.quantity || '-';
                 const captionText = item.caption ? `<div class="text-xs text-slate-500 mt-1">${item.caption}</div>` : '';
+                const isSoldOut = item.status === 'หมดแล้ว';
+                const likesCount = item.likes || 0;
 
                 return `
                     <div class="bg-white rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between overflow-hidden hover:shadow-md transition">
@@ -261,17 +262,15 @@
                             <div class="p-4 pb-2 flex justify-between items-center relative">
                                 <span class="text-xs font-bold text-slate-700">${item.twitter_handle}</span>
                                 <div class="flex items-center space-x-1.5">
-                                    <button type="button" onclick="toggleStatus(${item.id}, '${item.twitter_handle}', '${item.status}')" class="px-2.5 py-1 rounded-full text-xs font-medium ${isOwner ? 'cursor-pointer hover:opacity-80 shadow-sm' : 'cursor-default'} ${item.status === 'หมดแล้ว' ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}">
-                                        ${item.status === 'หมดแล้ว' ? '🔴 หมดแล้ว' : '🟢 กำลังแจก'} ${isOwner ? '⚙️' : ''}
+                                    <button type="button" onclick="toggleStatus(${item.id}, '${item.twitter_handle}', '${item.status}')" class="px-2.5 py-1 rounded-full text-xs font-medium ${isOwner ? 'cursor-pointer hover:opacity-80 shadow-sm' : 'cursor-default'} ${isSoldOut ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}">
+                                        ${isSoldOut ? '🔴 หมดแล้ว' : '🟢 กำลังแจก'} ${isOwner ? '⚙️' : ''}
                                     </button>
                                     
-                                    <!-- ปุ่มจุดสามจุดสำหรับเจ้าของโพสต์ -->
                                     ${isOwner ? `
                                         <div class="relative">
                                             <button type="button" onclick="toggleCardDropdown(event, ${item.id})" class="w-7 h-7 flex items-center justify-center rounded-full hover:bg-slate-100 text-slate-500 transition text-xs font-bold">
                                                 ⋮
                                             </button>
-                                            <!-- กล่องเมนูดรอปดาวน์ของการ์ด -->
                                             <div id="cardDropdown-${item.id}" class="card-dropdown hidden absolute right-0 mt-1 w-32 bg-white border border-slate-100 rounded-xl shadow-lg py-1 z-30">
                                                 <button type="button" onclick="openEditModal(${item.id})" class="w-full text-left px-3 py-2 text-xs text-slate-700 hover:bg-slate-50 flex items-center space-x-1.5 border-b border-slate-100">
                                                     <span>✏️ แก้ไข</span>
@@ -285,17 +284,33 @@
                                 </div>
                             </div>
                             
-                            <!-- รูปภาพสัดส่วน 1:1 -->
+                            <!-- รูปภาพ (ถ้าหมดแล้ว จะลดความสว่าง + มีป้ายแปะทับ) -->
                             <div class="w-full aspect-square bg-slate-100 relative overflow-hidden flex items-center justify-center border-y border-slate-100 cursor-pointer group" onclick="openImageModal('${imageUrl}')">
-                                <img src="${imageUrl}" alt="Freebie Image" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-                                <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs font-medium">
-                                    🔍 คลิกเพื่อดูรูปใหญ่
-                                </div>
+                                <img src="${imageUrl}" alt="Freebie Image" class="w-full h-full object-cover group-hover:scale-105 transition duration-300 ${isSoldOut ? 'opacity-40 grayscale' : ''}">
+                                
+                                ${isSoldOut ? `
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <span class="bg-rose-600/90 text-white font-bold text-sm px-4 py-1.5 rounded-full shadow-lg transform -rotate-6 tracking-wider">
+                                            🔴 หมดแล้วจ้า
+                                        </span>
+                                    </div>
+                                ` : `
+                                    <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs font-medium">
+                                        🔍 คลิกเพื่อดูรูปใหญ่
+                                    </div>
+                                `}
                             </div>
 
                             <!-- ข้อมูลรายละเอียด -->
                             <div class="p-4 space-y-1.5">
-                                <h4 class="text-sm font-bold text-indigo-600">${giveawayName}</h4>
+                                <div class="flex justify-between items-start">
+                                    <h4 class="text-sm font-bold text-indigo-600">${giveawayName}</h4>
+                                    <!-- ปุ่มกดหัวใจ (Like) -->
+                                    <button onclick="likeGiveaway(${item.id}, ${likesCount})" class="flex items-center space-x-1 bg-pink-50 hover:bg-pink-100 text-pink-600 px-2 py-1 rounded-full text-xs font-semibold transition">
+                                        <span>❤️</span>
+                                        <span>${likesCount}</span>
+                                    </button>
+                                </div>
                                 <div class="flex items-center justify-between text-xs text-slate-600">
                                     <span>📍 ${location}</span>
                                     <span class="bg-slate-100 px-2 py-0.5 rounded-md font-semibold">📦 จำนวน: ${quantity} ชิ้น</span>
@@ -313,6 +328,18 @@
                     </div>
                 `;
             }).join('');
+        }
+
+        // ฟังก์ชันกดหัวใจ (Like)
+        async function likeGiveaway(id, currentLikes) {
+            const newLikes = currentLikes + 1;
+            // อัปเดตแบบเรียลไทม์ในหน้าจอทันทีเพื่อความไว
+            const targetItem = allGiveaways.find(g => g.id === id);
+            if (targetItem) targetItem.likes = newLikes;
+            renderGiveaways();
+
+            // ส่งค่าไปอัปเดตบน Supabase
+            await sbClient.from('giveaways').update({ likes: newLikes }).eq('id', id);
         }
 
         function openAddModal() {
@@ -368,7 +395,8 @@
                     tweet_url, 
                     image_url: imageUrl, 
                     caption, 
-                    status: 'กำลังแจก'
+                    status: 'กำลังแจก',
+                    likes: 0
                 }]);
 
                 if (insertError) throw new Error(insertError.message);
@@ -385,7 +413,6 @@
             }
         }
 
-        // จัดการเปิด Modal แก้ไขข้อมูล
         function openEditModal(id) {
             document.querySelectorAll('.card-dropdown').forEach(el => el.classList.add('hidden'));
 
@@ -518,7 +545,6 @@
             if (actionArea) actionArea.remove();
         }
 
-        // จัดการ Dropdown ต่างๆ
         function toggleDropdown(event) {
             event.stopPropagation();
             document.querySelectorAll('.card-dropdown').forEach(el => el.classList.add('hidden'));

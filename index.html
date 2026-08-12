@@ -12,35 +12,45 @@
 </head>
 <body class="bg-slate-50 min-h-screen text-slate-800">
     <!-- Header -->
-    <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
-        <div class="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
-            <h1 class="text-xl font-bold bg-gradient-to-r from-indigo-500 to-pink-500 bg-clip-text text-transparent cursor-pointer" onclick="resetFilter()">
-                ✨ #PLLIมาแจก
-            </h1>
+<header class="bg-white border-b border-slate-200 sticky top-0 z-50">
+    <div class="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
+        <h1 class="text-xl font-bold bg-gradient-to-r from-indigo-500 to-pink-500 bg-clip-text text-transparent cursor-pointer" onclick="resetFilter()">
+            ✨ #PLLIมาแจก
+        </h1>
+        <div id="auth-section" class="flex items-center space-x-3">
+            <div id="login-container">
+                <button onclick="loginWithTwitter()" class="bg-black text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-slate-800 transition flex items-center space-x-2">
+                    <span>เข้าสู่ระบบด้วย X</span>
+                </button>
+            </div>
             
-            <div id="auth-section" class="flex items-center space-x-3">
-                <div id="login-container">
-                    <button onclick="loginWithTwitter()" class="bg-black text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-slate-800 transition flex items-center space-x-2">
-                        <span>เข้าสู่ระบบด้วย X</span>
+            <!-- ส่วนแสดงชื่อและ Dropdown เมนู -->
+            <div id="user-container" class="hidden relative flex items-center space-x-1.5 sm:space-x-2">
+                <div class="relative">
+                    <!-- ปุ่มชื่อแอคเคาท์ สำหรับกดเปิด/ปิด Dropdown -->
+                    <button type="button" onclick="toggleDropdown(event)" class="flex items-center space-x-1.5 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-full max-w-[150px] sm:max-w-none transition text-slate-700">
+                        <span id="display-user" class="text-[11px] sm:text-xs font-semibold truncate"></span>
+                        <span class="text-slate-400 text-[10px]">▼</span>
                     </button>
+                    
+                    <!-- กล่อง Dropdown เมนู -->
+                    <div id="userDropdown" class="absolute right-0 mt-2 w-36 bg-white border border-slate-100 rounded-2xl shadow-lg hidden py-1 z-50">
+                        <button onclick="logout()" class="w-full text-left px-4 py-2.5 text-xs text-rose-600 hover:bg-rose-50 font-medium transition flex items-center space-x-2">
+                            <span>ออกจากระบบ</span>
+                        </button>
+                    </div>
                 </div>
-                <div id="user-container" class="hidden flex items-center space-x-1.5 sm:space-x-2">
-    <!-- กล่องชื่อผู้ใช้และปุ่มออก ปรับให้ย่อสั้นลงบนมือถือ -->
-    <div class="flex items-center space-x-1 bg-slate-100 px-2 sm:px-3 py-1.5 rounded-full max-w-[120px] sm:max-w-none truncate">
-        <span id="display-user" class="text-[11px] sm:text-xs font-semibold text-slate-700 truncate"></span>
-        <button onclick="logout()" class="text-rose-500 hover:text-rose-700 font-bold text-xs pl-1 border-l border-slate-300 flex-shrink-0" title="ออกจากระบบ">✕</button>
-    </div>
-    
-    <button onclick="filterMyGiveaways()" id="my-giveaway-btn" class="bg-amber-100 text-amber-800 px-2.5 sm:px-3 py-1.5 rounded-full text-[11px] sm:text-xs font-medium hover:bg-amber-200 transition flex-shrink-0">
-        📌 my giveaway
-    </button>
-    <button onclick="openAddModal()" class="bg-indigo-600 text-white px-3 sm:px-4 py-2 rounded-full text-[11px] sm:text-sm font-medium hover:bg-indigo-700 transition flex-shrink-0">
-        + ลงทะเบียน กอว.
-    </button>
-</div>
+
+                <button onclick="filterMyGiveaways()" id="my-giveaway-btn" class="bg-amber-100 text-amber-800 px-2.5 sm:px-3 py-1.5 rounded-full text-[11px] sm:text-xs font-medium hover:bg-amber-200 transition flex-shrink-0">
+                    📌 my giveaway
+                </button>
+                <button onclick="openAddModal()" class="bg-indigo-600 text-white px-3 sm:px-4 py-2 rounded-full text-[11px] sm:text-sm font-medium hover:bg-indigo-700 transition flex-shrink-0">
+                    + ลงทะเบียน กอว.
+                </button>
             </div>
         </div>
-    </header>
+    </div>
+</header>
 
     <!-- Main Content -->
     <main class="max-w-5xl mx-auto px-4 py-8">
@@ -392,6 +402,20 @@ function closePopupCustom() {
     const actionArea = document.getElementById('popup-action-area');
     if (actionArea) actionArea.remove();
 }
+
+        function toggleDropdown(event) {
+    event.stopPropagation();
+    const dropdown = document.getElementById('userDropdown');
+    dropdown.classList.toggle('hidden');
+}
+
+// กดคลิกที่พื้นที่ว่างส่วนอื่นเพื่อปิด Dropdown
+window.addEventListener('click', function() {
+    const dropdown = document.getElementById('userDropdown');
+    if (dropdown && !dropdown.classList.contains('hidden')) {
+        dropdown.classList.add('hidden');
+    }
+});
         
         checkUser();
         fetchGiveaways();

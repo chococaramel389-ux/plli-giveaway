@@ -304,26 +304,27 @@
         }
 
         async function toggleStatus(id, itemOwner, currentStatus) {
-            if (!currentUser) {
-                showPopup('แจ้งเตือน', 'กรุณาเข้าสู่ระบบก่อนเปลี่ยนสถานะ', '⚠️');
-                return;
-            }
-            if (currentUser !== itemOwner) {
-                showPopup('ไม่อนุญาต', 'คุณสามารถเปลี่ยนสถานะได้เฉพาะของที่คุณเป็นเจ้าของเท่านั้น!', '🔒');
-                return;
-            }
+    if (!currentUser) {
+        showPopup('แจ้งเตือน', 'กรุณาเข้าสู่ระบบก่อนเปลี่ยนสถานะ', '⚠️');
+        return;
+    }
+    if (currentUser !== itemOwner) {
+        showPopup('ไม่อนุญาต', 'คุณสามารถเปลี่ยนสถานะได้เฉพาะของที่คุณเป็นเจ้าของเท่านั้น!', '🔒');
+        return;
+    }
+    const newStatus = currentStatus === 'กำลังแจก' ? 'หมดแล้ว' : 'กำลังแจก';
+    const { error } = await sbClient.from('giveaways').update({ status: newStatus }).eq('id', id);
+    if (error) {
+        showPopup('เกิดข้อผิดพลาด', error.message, '❌');
+    } else {
+        fetchGiveaways();
+    }
+}
 
-            const newStatus = currentStatus === 'กำลังแจก' ? 'หมดแล้ว' : 'กำลังแจก';
-            const { error } = await sbClient.from('giveaways').update({ status: newStatus }).eq('id', id);
-            
-            if (error) {
-                showPopup('เกิดข้อผิดพลาด', error.message, '❌');
-            } else {
-                fetchGiveaways();
-            }
-        }
+// ตัวแปรเก็บค่า ID ชั่วคราวเวลากดปุ่มลบ
+let pendingDeleteId = null;
 
-async function deleteGiveaway(id, itemOwner) {
+function deleteGiveaway(id, itemOwner) {
     if (!currentUser) {
         showPopup('แจ้งเตือน', 'กรุณาเข้าสู่ระบบก่อนลบรายการ', '⚠️');
         return;
@@ -333,16 +334,57 @@ async function deleteGiveaway(id, itemOwner) {
         return;
     }
     
-    // ยืนยันการลบ
-    if (!confirm('คุณต้องการลบรายการนี้ใช่หรือไม่?')) return;
+    pendingDeleteId = id;
+    
+    // แสดง Popup ถามยืนยันการลบแบบ Custom Card
+    document.getElementById('popup-title').innerText = 'ยืนยันการลบ';
+    document.getElementById('popup-message').innerText = 'คุณต้องการลบรายการของแจกนี้ใช่หรือไม่?';
+    document.getElementById('popup-icon').innerText = '🗑️';
+    
+    // เปลี่ยนปุ่มใน Popup ให้เป็นปุ่มยืนยันการลบ
+    const popupBox = document.querySelector('#customPopup > div');
+    // เพิ่มปุ่มยืนยันและยกเลิกชั่วคราว
+    let actionArea = document.getElementById('popup-action-area');
+    if (!actionArea) {
+        actionArea = document.createElement('div');
+        actionArea.id = 'popup-action-area';
+        actionArea.className = 'flex space-x-2 mt-4';
+        // แทรกก่อนปุ่มตกลงเดิม
+        const oldBtn = popupBox.querySelector('button');
+        oldBtn.style.display = 'none';
+        popupBox.appendChild(actionArea);
+    }
+    
+    actionArea.innerHTML = `
+        <button onclick="closePopupCustom()" class="w-1/2 py-2.5 bg-slate-100 text-slate-600 text-xs font-semibold rounded-xl hover:bg-slate-200 transition">ยกเลิก</button>
+        <button onclick="confirmDelete()" class="w-1/2 py-2.5 bg-rose-600 text-white text-xs font-semibold rounded-xl hover:bg-rose-700 transition">ยืนยันลบ</button>
+    `;
+    
+    document.getElementById('customPopup').classList.remove('hidden');
+}
 
-    const { error } = await sbClient.from('giveaways').delete().eq('id', id);
+async function confirmDelete() {
+    if (!pendingDeleteId) return;
+    
+    const { error } = await sbClient.from('giveaways').delete().eq('id', pendingDeleteId);
+    closePopupCustom();
+    
     if (error) {
         showPopup('เกิดข้อผิดพลาด', error.message, '❌');
     } else {
         showPopup('สำเร็จ', 'ลบรายการเรียบร้อยแล้ว', '🗑️');
         fetchGiveaways();
     }
+    pendingDeleteId = null;
+}
+
+function closePopupCustom() {
+    document.getElementById('customPopup').classList.add('hidden');
+    // คืนค่าปุ่มเดิมใน Popup
+    const oldBtn = document.querySelector('#customPopup button');
+    if (oldBtn) oldBtn.style.display = 'block';
+    const actionArea = document.getElementById('popup-action-area');
+    if (actionArea) actionArea.remove();
 }
         
         checkUser();

@@ -428,10 +428,26 @@
             if (actionArea) actionArea.remove();
         }
 
-        // ฟังก์ชันเปิด/ปิดเมนูดรอปดาวน์เฉพาะการ์ดนั้นๆ
+      // ฟังก์ชันเปิด/ปิด Dropdown โปรไฟล์ด้านบน
+function toggleDropdown(event) {
+    event.stopPropagation();
+    // ปิดดรอปดาวน์ของการ์ดทั้งหมดก่อน
+    document.querySelectorAll('.card-dropdown').forEach(el => el.classList.add('hidden'));
+    
+    const dropdown = document.getElementById('userDropdown');
+    if (dropdown) {
+        dropdown.classList.toggle('hidden');
+    }
+}
+
+// ฟังก์ชันเปิด/ปิดเมนูดรอปดาวน์ของการ์ด
 function toggleCardDropdown(event, id) {
     event.stopPropagation();
-    // ปิดดรอปดาวน์อันอื่นๆ ที่อาจเปิดค้างไว้ก่อน
+    // ปิด Dropdown โปรไฟล์ด้านบนก่อน
+    const userDropdown = document.getElementById('userDropdown');
+    if (userDropdown) userDropdown.classList.add('hidden');
+
+    // ปิดดรอปดาวน์การ์ดอื่นๆ
     document.querySelectorAll('.card-dropdown').forEach(el => {
         if (el.id !== `cardDropdown-${id}`) el.classList.add('hidden');
     });
@@ -441,6 +457,17 @@ function toggleCardDropdown(event, id) {
         dropdown.classList.toggle('hidden');
     }
 }
+
+// ปิดดรอปดาวน์ทั้งหมดเมื่อคลิกพื้นที่ว่างข้างนอก
+window.addEventListener('click', function() {
+    const userDropdown = document.getElementById('userDropdown');
+    if (userDropdown) {
+        userDropdown.classList.add('hidden');
+    }
+    document.querySelectorAll('.card-dropdown').forEach(el => {
+        el.classList.add('hidden');
+    });
+});
 
 // อัปเดตอีเวนต์คลิกเพื่อปิดดรอปดาวน์เวลาคลิกพื้นที่ว่าง
 window.addEventListener('click', function() {

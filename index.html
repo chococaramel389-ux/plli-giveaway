@@ -278,10 +278,10 @@
             const index = bookmarks.indexOf(id);
             if (index > -1) {
                 bookmarks.splice(index, 1);
-                showPopup('นำออก', 'นำออกจากรายการบันทึกแล้ว', '📌');
+                //showPopup('นำออก', 'นำออกจากรายการบันทึกแล้ว', '📌');
             } else {
                 bookmarks.push(id);
-                showPopup('สำเร็จ', 'บันทึกรายการนี้ไว้เรียบร้อยแล้ว!', '🔖');
+                //showPopup('สำเร็จ', 'บันทึกรายการนี้ไว้เรียบร้อยแล้ว!', '🔖');
             }
             localStorage.setItem('plli_bookmarks', JSON.stringify(bookmarks));
             updateBookmarkCountUI();

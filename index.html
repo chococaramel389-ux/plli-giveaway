@@ -36,11 +36,11 @@
                         
                         <div id="userDropdown" class="absolute right-0 mt-2 w-48 bg-white border border-slate-100 rounded-2xl shadow-lg hidden py-1.5 z-50">
                             <button type="button" id="toggle-view-btn" onclick="event.stopPropagation(); toggleViewMode('mine');" class="w-full text-left px-4 py-2.5 text-xs text-slate-700 hover:bg-slate-50 font-medium transition border-b border-slate-100 flex items-center justify-between">
-                                <span id="toggle-view-text">📌 ของฉัน</span>
+                                <span id="toggle-view-text">📌 My Giveaway</span>
                             </button>
                             
                             <button type="button" id="bookmarkTabBtn" onclick="event.stopPropagation(); toggleViewMode('bookmarks');" class="w-full text-left px-4 py-2.5 text-xs text-slate-700 hover:bg-slate-50 font-medium transition border-b border-slate-100 flex items-center justify-between">
-                                <span>🔖 ที่บันทึกไว้</span>
+                                <span>🔖 Bookmark</span>
                                 <span id="bm-count" class="bg-indigo-100 text-indigo-700 px-1.5 py-0.2 rounded-full text-[10px] font-bold">0</span>
                             </button>
 
@@ -64,13 +64,12 @@
             <h2 class="text-2xl font-bold mb-2">#PLLIมาแจก - PLAVE World Tour [KEEP IT MANIC] in BKK</h2>
             <p id="sub-title" class="text-slate-500 text-sm mb-4">💙💜🩷❤️🖤</p>
             
-            <!-- ช่องค้นหาแบบยาวรวมเบ็ดเสร็จ (สีส้ม / สีเขียว / สีฟ้า ตามดีไซน์) -->
+            <!-- ช่องค้นหาแบบยาวรวมเบ็ดเสร็จ -->
             <div class="max-w-3xl mx-auto">
                 <div class="relative flex items-center w-full bg-white border border-slate-200 rounded-full shadow-sm px-3.5 py-1.5 transition focus-within:ring-2 focus-within:ring-indigo-500">
                     <span class="text-slate-400 text-sm mr-2.5">🔍</span>
                     <input type="text" id="searchInput" oninput="renderGiveaways()" placeholder="ค้นหาชื่อกอว., สถานที่ หรือแอค X..." class="w-full bg-transparent text-sm focus:outline-none py-1.5">
                     
-                    <!-- ส่วนป้ายจำนวน (สีเขียว) และปุ่มสลับเก่าใหม่ (สีฟ้า) ฝังอยู่ด้านขวาในแถบค้นหา -->
                     <div class="flex items-center space-x-2 flex-shrink-0 pl-2 border-l border-slate-100 ml-2">
                         <div id="statsBadge" class="bg-slate-50 px-2.5 py-1 rounded-full text-xs text-slate-600 flex items-center whitespace-nowrap font-medium">
                             <strong id="totalCount" class="text-indigo-600 mr-1">0</strong> รายการ
@@ -318,14 +317,14 @@
                 const bookmarks = getBookmarks();
                 dataToRender = dataToRender.filter(item => bookmarks.includes(item.id));
                 document.getElementById('sub-title').innerText = `รายการที่บันทึกไว้ (${dataToRender.length} รายการ) 🔖`;
-                if (mineBtnText) mineBtnText.innerText = "📌 ของฉัน";
+                if (mineBtnText) mineBtnText.innerText = "📌 My Giveaway";
                 if (bookmarkTabBtn) {
                     bookmarkTabBtn.classList.remove('text-slate-700', 'hover:bg-slate-50');
                     bookmarkTabBtn.classList.add('bg-indigo-50', 'text-indigo-700');
                 }
             } else {
                 document.getElementById('sub-title').innerText = '💙💜🩷❤️🖤';
-                if (mineBtnText) mineBtnText.innerText = "📌 ของฉัน";
+                if (mineBtnText) mineBtnText.innerText = "📌 My Giveaway";
                 if (bookmarkTabBtn) {
                     bookmarkTabBtn.classList.remove('bg-indigo-50', 'text-indigo-700');
                     bookmarkTabBtn.classList.add('text-slate-700', 'hover:bg-slate-50');
@@ -428,7 +427,7 @@
                                 </div>
                                 <div class="flex items-center justify-between text-xs text-slate-600">
                                     <span>📍 ${location}</span>
-                                    <span class="bg-slate-100 px-2 py-0.5 rounded-md font-semibold">📦 จำนวน: ${quantity} ชิ้น</span>
+                                    <span class="bg-slate-100 px-2 py-0.5 rounded-md font-semibold">${quantity} ชิ้น</span>
                                 </div>
                                 ${captionText}
                             </div>

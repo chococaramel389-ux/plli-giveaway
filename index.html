@@ -28,7 +28,6 @@
                 </div>
                 
                 <div id="user-container" class="hidden flex items-center space-x-2">
-                    <!-- เมนูดรอปดาวน์รวมทุกอย่าง -->
                     <div class="relative">
                         <button type="button" onclick="toggleDropdown(event)" class="flex items-center space-x-1.5 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-full max-w-[130px] sm:max-w-none transition text-slate-700">
                             <span id="display-user" class="text-[11px] sm:text-xs font-semibold truncate"></span>
@@ -37,16 +36,16 @@
                         
                         <div id="userDropdown" class="absolute right-0 mt-2 w-48 bg-white border border-slate-100 rounded-2xl shadow-lg hidden py-1.5 z-50">
                             <button type="button" id="toggle-view-btn" onclick="event.stopPropagation(); toggleViewMode('mine');" class="w-full text-left px-4 py-2.5 text-xs text-slate-700 hover:bg-slate-50 font-medium transition border-b border-slate-100 flex items-center justify-between">
-                                <span id="toggle-view-text">My Giveaway</span>
+                                <span id="toggle-view-text">📌 ของฉัน</span>
                             </button>
                             
                             <button type="button" id="bookmarkTabBtn" onclick="event.stopPropagation(); toggleViewMode('bookmarks');" class="w-full text-left px-4 py-2.5 text-xs text-slate-700 hover:bg-slate-50 font-medium transition border-b border-slate-100 flex items-center justify-between">
-                                <span>Bookmark</span>
+                                <span>🔖 ที่บันทึกไว้</span>
                                 <span id="bm-count" class="bg-indigo-100 text-indigo-700 px-1.5 py-0.2 rounded-full text-[10px] font-bold">0</span>
                             </button>
 
                             <button type="button" onclick="event.stopPropagation(); logout();" class="w-full text-left px-4 py-2.5 text-xs text-rose-600 hover:bg-rose-50 font-medium transition flex items-center space-x-1.5">
-                                <span>ออกจากระบบ</span>
+                                <span>🚪 ออกจากระบบ</span>
                             </button>
                         </div>
                     </div>
@@ -65,21 +64,22 @@
             <h2 class="text-2xl font-bold mb-2">#PLLIมาแจก - PLAVE World Tour [KEEP IT MANIC] in BKK</h2>
             <p id="sub-title" class="text-slate-500 text-sm mb-4">💙💜🩷❤️🖤</p>
             
-            <div class="max-w-2xl mx-auto flex flex-col sm:flex-row items-center gap-2">
-                <div class="relative flex-1 w-full">
-                    <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 text-sm"> </span>
-                    <input type="text" id="searchInput" oninput="renderGiveaways()" placeholder="ค้นหาชื่อกอว., สถานที่ หรือแอค X..." class="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm transition">
-                </div>
-                
-                <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
-                    <div id="statsBadge" class="bg-white border border-slate-200 px-3 py-2 rounded-full text-xs text-slate-600 shadow-sm flex items-center space-x-1.5 whitespace-nowrap">
-                        <span><strong id="totalCount" class="text-indigo-600">0</strong> รายการ</span>
-                    </div>
+            <!-- ช่องค้นหาแบบยาวรวมเบ็ดเสร็จ (สีส้ม / สีเขียว / สีฟ้า ตามดีไซน์) -->
+            <div class="max-w-3xl mx-auto">
+                <div class="relative flex items-center w-full bg-white border border-slate-200 rounded-full shadow-sm px-3.5 py-1.5 transition focus-within:ring-2 focus-within:ring-indigo-500">
+                    <span class="text-slate-400 text-sm mr-2.5">🔍</span>
+                    <input type="text" id="searchInput" oninput="renderGiveaways()" placeholder="ค้นหาชื่อกอว., สถานที่ หรือแอค X..." class="w-full bg-transparent text-sm focus:outline-none py-1.5">
+                    
+                    <!-- ส่วนป้ายจำนวน (สีเขียว) และปุ่มสลับเก่าใหม่ (สีฟ้า) ฝังอยู่ด้านขวาในแถบค้นหา -->
+                    <div class="flex items-center space-x-2 flex-shrink-0 pl-2 border-l border-slate-100 ml-2">
+                        <div id="statsBadge" class="bg-slate-50 px-2.5 py-1 rounded-full text-xs text-slate-600 flex items-center whitespace-nowrap font-medium">
+                            <strong id="totalCount" class="text-indigo-600 mr-1">0</strong> รายการ
+                        </div>
 
-                    <button type="button" onclick="toggleSortOrder()" id="sortBtn" class="bg-white hover:bg-slate-50 border border-slate-200 px-3 py-2 rounded-full text-xs text-slate-700 font-medium shadow-sm transition flex items-center space-x-1 whitespace-nowrap">
-                        <span id="sortIcon">🔽</span>
-                        <span id="sortText"> </span>
-                    </button>
+                        <button type="button" onclick="toggleSortOrder()" id="sortBtn" class="bg-slate-100 hover:bg-slate-200 p-2 rounded-full text-slate-700 transition flex items-center justify-center" title="สลับเรียงลำดับ">
+                            <span id="sortIcon" class="text-xs">🔽</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -290,13 +290,10 @@
         function toggleSortOrder() {
             sortNewestFirst = !sortNewestFirst;
             const sortIcon = document.getElementById('sortIcon');
-            const sortText = document.getElementById('sortText');
             if (sortNewestFirst) {
                 sortIcon.innerText = '🔽';
-                sortText.innerText = '';
             } else {
                 sortIcon.innerText = '🔼';
-                sortText.innerText = '';
             }
             renderGiveaways();
         }
@@ -312,7 +309,7 @@
             if (currentFilterMode === 'mine') {
                 dataToRender = dataToRender.filter(item => item.twitter_handle === currentUser);
                 document.getElementById('sub-title').innerText = `แสดงเฉพาะของคุณ (${currentUser})`;
-                if (mineBtnText) mineBtnText.innerText = "กลับหน้าหลัก";
+                if (mineBtnText) mineBtnText.innerText = "🏠 กลับหน้าหลัก";
                 if (bookmarkTabBtn) {
                     bookmarkTabBtn.classList.remove('bg-indigo-50', 'text-indigo-700');
                     bookmarkTabBtn.classList.add('text-slate-700', 'hover:bg-slate-50');
@@ -321,14 +318,14 @@
                 const bookmarks = getBookmarks();
                 dataToRender = dataToRender.filter(item => bookmarks.includes(item.id));
                 document.getElementById('sub-title').innerText = `รายการที่บันทึกไว้ (${dataToRender.length} รายการ) 🔖`;
-                if (mineBtnText) mineBtnText.innerText = "My Giveaway";
+                if (mineBtnText) mineBtnText.innerText = "📌 ของฉัน";
                 if (bookmarkTabBtn) {
                     bookmarkTabBtn.classList.remove('text-slate-700', 'hover:bg-slate-50');
                     bookmarkTabBtn.classList.add('bg-indigo-50', 'text-indigo-700');
                 }
             } else {
                 document.getElementById('sub-title').innerText = '💙💜🩷❤️🖤';
-                if (mineBtnText) mineBtnText.innerText = "My Giveaway";
+                if (mineBtnText) mineBtnText.innerText = "📌 ของฉัน";
                 if (bookmarkTabBtn) {
                     bookmarkTabBtn.classList.remove('bg-indigo-50', 'text-indigo-700');
                     bookmarkTabBtn.classList.add('text-slate-700', 'hover:bg-slate-50');
@@ -389,10 +386,10 @@
                                             </button>
                                             <div id="cardDropdown-${item.id}" class="card-dropdown hidden absolute right-0 mt-1 w-32 bg-white border border-slate-100 rounded-xl shadow-lg py-1 z-30">
                                                 <button type="button" onclick="openEditModal(${item.id})" class="w-full text-left px-3 py-2 text-xs text-slate-700 hover:bg-slate-50 flex items-center space-x-1.5 border-b border-slate-100">
-                                                    <span>แก้ไข</span>
+                                                    <span>✏️ แก้ไข</span>
                                                 </button>
                                                 <button type="button" onclick="deleteGiveaway(${item.id}, '${item.twitter_handle}')" class="w-full text-left px-3 py-2 text-xs text-rose-600 hover:bg-rose-50 flex items-center space-x-1.5">
-                                                    <span>ลบ</span>
+                                                    <span>🗑️ ลบ</span>
                                                 </button>
                                             </div>
                                         </div>
@@ -431,7 +428,7 @@
                                 </div>
                                 <div class="flex items-center justify-between text-xs text-slate-600">
                                     <span>📍 ${location}</span>
-                                    <span class="bg-slate-100 px-2 py-0.5 rounded-md font-semibold">จำนวน: ${quantity} ชิ้น</span>
+                                    <span class="bg-slate-100 px-2 py-0.5 rounded-md font-semibold">📦 จำนวน: ${quantity} ชิ้น</span>
                                 </div>
                                 ${captionText}
                             </div>

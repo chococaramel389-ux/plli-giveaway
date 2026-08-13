@@ -293,10 +293,10 @@
             const sortText = document.getElementById('sortText');
             if (sortNewestFirst) {
                 sortIcon.innerText = '🔽';
-                sortText.innerText = 'ใหม่ไปเก่า';
+                sortText.innerText = '';
             } else {
                 sortIcon.innerText = '🔼';
-                sortText.innerText = 'เก่าไปใหม่';
+                sortText.innerText = '';
             }
             renderGiveaways();
         }
@@ -321,14 +321,14 @@
                 const bookmarks = getBookmarks();
                 dataToRender = dataToRender.filter(item => bookmarks.includes(item.id));
                 document.getElementById('sub-title').innerText = `รายการที่บันทึกไว้ (${dataToRender.length} รายการ) 🔖`;
-                if (mineBtnText) mineBtnText.innerText = "📌My Giveaway";
+                if (mineBtnText) mineBtnText.innerText = "My Giveaway";
                 if (bookmarkTabBtn) {
                     bookmarkTabBtn.classList.remove('text-slate-700', 'hover:bg-slate-50');
                     bookmarkTabBtn.classList.add('bg-indigo-50', 'text-indigo-700');
                 }
             } else {
                 document.getElementById('sub-title').innerText = '💙💜🩷❤️🖤';
-                if (mineBtnText) mineBtnText.innerText = "📌My Giveaway";
+                if (mineBtnText) mineBtnText.innerText = "My Giveaway";
                 if (bookmarkTabBtn) {
                     bookmarkTabBtn.classList.remove('bg-indigo-50', 'text-indigo-700');
                     bookmarkTabBtn.classList.add('text-slate-700', 'hover:bg-slate-50');
@@ -389,10 +389,10 @@
                                             </button>
                                             <div id="cardDropdown-${item.id}" class="card-dropdown hidden absolute right-0 mt-1 w-32 bg-white border border-slate-100 rounded-xl shadow-lg py-1 z-30">
                                                 <button type="button" onclick="openEditModal(${item.id})" class="w-full text-left px-3 py-2 text-xs text-slate-700 hover:bg-slate-50 flex items-center space-x-1.5 border-b border-slate-100">
-                                                    <span>✏️ แก้ไข</span>
+                                                    <span>แก้ไข</span>
                                                 </button>
                                                 <button type="button" onclick="deleteGiveaway(${item.id}, '${item.twitter_handle}')" class="w-full text-left px-3 py-2 text-xs text-rose-600 hover:bg-rose-50 flex items-center space-x-1.5">
-                                                    <span>🗑️ ลบ</span>
+                                                    <span>ลบ</span>
                                                 </button>
                                             </div>
                                         </div>

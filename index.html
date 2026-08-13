@@ -64,21 +64,24 @@
             <h2 class="text-2xl font-bold mb-2">#PLLIมาแจก - PLAVE World Tour [KEEP IT MANIC] in BKK</h2>
             <p id="sub-title" class="text-slate-500 text-sm mb-4">💙💜🩷❤️🖤</p>
             
-            <!-- ช่องค้นหาแบบยาวรวมเบ็ดเสร็จ -->
-            <div class="max-w-3xl mx-auto">
-                <div class="relative flex items-center w-full bg-white border border-slate-200 rounded-full shadow-sm px-3.5 py-1.5 transition focus-within:ring-2 focus-within:ring-indigo-500">
+            <!-- ส่วนควบคุม: แยกช่องค้นหา, จำนวนโพสต์, ปุ่มเก่าใหม่ ออกจากกัน -->
+            <div class="max-w-3xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-3">
+                <!-- ช่องค้นหา -->
+                <div class="relative flex items-center w-full bg-white border border-slate-200 rounded-full shadow-sm px-4 py-2 transition focus-within:ring-2 focus-within:ring-indigo-500">
                     <span class="text-slate-400 text-sm mr-2.5">🔍</span>
-                    <input type="text" id="searchInput" oninput="renderGiveaways()" placeholder="ค้นหาชื่อกอว., สถานที่ หรือแอค X..." class="w-full bg-transparent text-sm focus:outline-none py-1.5">
-                    
-                    <div class="flex items-center space-x-2 flex-shrink-0 pl-2 border-l border-slate-100 ml-2">
-                        <div id="statsBadge" class="bg-slate-50 px-2.5 py-1 rounded-full text-xs text-slate-600 flex items-center whitespace-nowrap font-medium">
-                            <strong id="totalCount" class="text-indigo-600 mr-1">0</strong> รายการ
-                        </div>
+                    <input type="text" id="searchInput" oninput="renderGiveaways()" placeholder="ค้นหาชื่อกอว., สถานที่ หรือแอค X..." class="w-full bg-transparent text-sm focus:outline-none">
+                </div>
 
-                        <button type="button" onclick="toggleSortOrder()" id="sortBtn" class="bg-slate-100 hover:bg-slate-200 p-2 rounded-full text-slate-700 transition flex items-center justify-center" title="สลับเรียงลำดับ">
-                            <span id="sortIcon" class="text-xs">🔽</span>
-                        </button>
+                <!-- จำนวนโพสต์ และ ปุ่มสลับเก่าใหม่ (แยกอิสระ) -->
+                <div class="flex items-center space-x-2.5 flex-shrink-0 w-full sm:w-auto justify-end">
+                    <div id="statsBadge" class="bg-white border border-slate-200 px-4 py-2 rounded-full text-xs text-slate-600 flex items-center shadow-sm font-medium whitespace-nowrap">
+                        <strong id="totalCount" class="text-indigo-600 mr-1">0</strong> รายการ
                     </div>
+
+                    <button type="button" onclick="toggleSortOrder()" id="sortBtn" class="bg-white border border-slate-200 hover:bg-slate-50 px-4 py-2 rounded-full text-slate-700 shadow-sm transition flex items-center space-x-1.5 text-xs font-semibold whitespace-nowrap" title="สลับเรียงลำดับ">
+                        <span id="sortIcon">🔽</span>
+                        <span id="sortText">เก่า-ใหม่</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -289,10 +292,13 @@
         function toggleSortOrder() {
             sortNewestFirst = !sortNewestFirst;
             const sortIcon = document.getElementById('sortIcon');
+            const sortText = document.getElementById('sortText');
             if (sortNewestFirst) {
                 sortIcon.innerText = '🔽';
+                sortText.innerText = 'เก่า-ใหม่';
             } else {
                 sortIcon.innerText = '🔼';
+                sortText.innerText = 'ใหม่-เก่า';
             }
             renderGiveaways();
         }
@@ -407,7 +413,7 @@
                                     </div>
                                 ` : `
                                     <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs font-medium">
-                                        🔍 คลิกเพื่อดูรูปใหญ่
+                                        คลิกเพื่อดูรูปใหญ่
                                     </div>
                                 `}
                             </div>

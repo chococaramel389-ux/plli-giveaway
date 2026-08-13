@@ -40,7 +40,7 @@
                             </button>
                             
                             <button type="button" id="bookmarkTabBtn" onclick="event.stopPropagation(); toggleViewMode('bookmarks');" class="w-full text-left px-4 py-2.5 text-xs text-slate-700 hover:bg-slate-50 font-medium transition border-b border-slate-100 flex items-center justify-between">
-                                <span>🔖 Bookmark</span>
+                                <span id="bookmark-view-text">🔖 Bookmark</span>
                                 <span id="bm-count" class="bg-indigo-100 text-indigo-700 px-1.5 py-0.2 rounded-full text-[10px] font-bold">0</span>
                             </button>
 
@@ -64,7 +64,7 @@
             <h2 class="text-2xl font-bold mb-2">#PLLIมาแจก - PLAVE World Tour [KEEP IT MANIC] in BKK</h2>
             <p id="sub-title" class="text-slate-500 text-sm mb-4">💙💜🩷❤️🖤</p>
             
-            <!-- ส่วนควบคุม: แยกช่องค้นหา, จำนวนโพสต์, ปุ่มเก่าใหม่ ออกจากกัน -->
+            <!-- ส่วนควบคุม -->
             <div class="max-w-3xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-3">
                 <!-- ช่องค้นหา -->
                 <div class="relative flex items-center w-full bg-white border border-slate-200 rounded-full shadow-sm px-4 py-2 transition focus-within:ring-2 focus-within:ring-indigo-500">
@@ -72,7 +72,7 @@
                     <input type="text" id="searchInput" oninput="renderGiveaways()" placeholder="ค้นหาชื่อกอว., สถานที่ หรือแอค X..." class="w-full bg-transparent text-sm focus:outline-none">
                 </div>
 
-                <!-- จำนวนโพสต์ และ ปุ่มสลับเก่าใหม่ (แยกอิสระ) -->
+                <!-- จำนวนโพสต์ และ ปุ่มสลับเก่าใหม่ -->
                 <div class="flex items-center space-x-2.5 flex-shrink-0 w-full sm:w-auto justify-end">
                     <div id="statsBadge" class="bg-white border border-slate-200 px-4 py-2 rounded-full text-xs text-slate-600 flex items-center shadow-sm font-medium whitespace-nowrap">
                         <strong id="totalCount" class="text-indigo-600 mr-1">0</strong> รายการ
@@ -309,12 +309,14 @@
             let dataToRender = [...allGiveaways];
 
             const mineBtnText = document.getElementById('toggle-view-text');
+            const bookmarkBtnText = document.getElementById('bookmark-view-text');
             const bookmarkTabBtn = document.getElementById('bookmarkTabBtn');
 
             if (currentFilterMode === 'mine') {
                 dataToRender = dataToRender.filter(item => item.twitter_handle === currentUser);
                 document.getElementById('sub-title').innerText = `แสดงเฉพาะของคุณ (${currentUser})`;
                 if (mineBtnText) mineBtnText.innerText = "🏠 กลับหน้าหลัก";
+                if (bookmarkBtnText) bookmarkBtnText.innerText = "🔖 Bookmark";
                 if (bookmarkTabBtn) {
                     bookmarkTabBtn.classList.remove('bg-indigo-50', 'text-indigo-700');
                     bookmarkTabBtn.classList.add('text-slate-700', 'hover:bg-slate-50');
@@ -324,6 +326,7 @@
                 dataToRender = dataToRender.filter(item => bookmarks.includes(item.id));
                 document.getElementById('sub-title').innerText = `รายการที่บันทึกไว้ (${dataToRender.length} รายการ) 🔖`;
                 if (mineBtnText) mineBtnText.innerText = "📌 My Giveaway";
+                if (bookmarkBtnText) bookmarkBtnText.innerText = "🏠 กลับหน้าหลัก";
                 if (bookmarkTabBtn) {
                     bookmarkTabBtn.classList.remove('text-slate-700', 'hover:bg-slate-50');
                     bookmarkTabBtn.classList.add('bg-indigo-50', 'text-indigo-700');
@@ -331,6 +334,7 @@
             } else {
                 document.getElementById('sub-title').innerText = '💙💜🩷❤️🖤';
                 if (mineBtnText) mineBtnText.innerText = "📌 My Giveaway";
+                if (bookmarkBtnText) bookmarkBtnText.innerText = "🔖 Bookmark";
                 if (bookmarkTabBtn) {
                     bookmarkTabBtn.classList.remove('bg-indigo-50', 'text-indigo-700');
                     bookmarkTabBtn.classList.add('text-slate-700', 'hover:bg-slate-50');

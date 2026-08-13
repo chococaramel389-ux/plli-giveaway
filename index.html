@@ -40,7 +40,10 @@
                             </button>
                             
                             <button type="button" id="bookmarkTabBtn" onclick="event.stopPropagation(); toggleViewMode('bookmarks');" class="w-full text-left px-4 py-2.5 text-xs text-slate-700 hover:bg-slate-50 font-medium transition border-b border-slate-100 flex items-center justify-between">
-                                <span id="bookmark-view-text">🔖 Bookmark</span>
+                                <span id="bookmark-view-text" class="flex items-center space-x-1.5">
+                                    <svg class="w-3.5 h-3.5 text-slate-500 inline-block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                                    <span>Bookmark</span>
+                                </span>
                                 <span id="bm-count" class="bg-indigo-100 text-indigo-700 px-1.5 py-0.2 rounded-full text-[10px] font-bold">0</span>
                             </button>
 
@@ -315,7 +318,12 @@
                 dataToRender = dataToRender.filter(item => item.twitter_handle === currentUser);
                 document.getElementById('sub-title').innerText = `แสดงเฉพาะของคุณ (${currentUser})`;
                 if (mineBtnText) mineBtnText.innerText = "🏠 กลับหน้าหลัก";
-                if (bookmarkBtnText) bookmarkBtnText.innerText = "🔖 Bookmark";
+                if (bookmarkBtnText) {
+                    bookmarkBtnText.innerHTML = `
+                        <svg class="w-3.5 h-3.5 text-slate-500 inline-block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                        <span>Bookmark</span>
+                    `;
+                }
                 if (bookmarkTabBtn) {
                     bookmarkTabBtn.classList.remove('bg-indigo-50', 'text-indigo-700');
                     bookmarkTabBtn.classList.add('text-slate-700', 'hover:bg-slate-50');
@@ -325,7 +333,12 @@
                 dataToRender = dataToRender.filter(item => bookmarks.includes(item.id));
                 document.getElementById('sub-title').innerText = `รายการที่บันทึกไว้ (${dataToRender.length} รายการ) 🔖`;
                 if (mineBtnText) mineBtnText.innerText = "📌 My Giveaway";
-                if (bookmarkBtnText) bookmarkBtnText.innerText = "🏠 กลับหน้าหลัก";
+                if (bookmarkBtnText) {
+                    bookmarkBtnText.innerHTML = `
+                        <svg class="w-3.5 h-3.5 text-indigo-700 inline-block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                        <span>กลับหน้าหลัก</span>
+                    `;
+                }
                 if (bookmarkTabBtn) {
                     bookmarkTabBtn.classList.remove('text-slate-700', 'hover:bg-slate-50');
                     bookmarkTabBtn.classList.add('bg-indigo-50', 'text-indigo-700');
@@ -333,7 +346,12 @@
             } else {
                 document.getElementById('sub-title').innerText = '💙💜🩷❤️🖤';
                 if (mineBtnText) mineBtnText.innerText = "📌 My Giveaway";
-                if (bookmarkBtnText) bookmarkBtnText.innerText = "🔖 Bookmark";
+                if (bookmarkBtnText) {
+                    bookmarkBtnText.innerHTML = `
+                        <svg class="w-3.5 h-3.5 text-slate-500 inline-block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                        <span>Bookmark</span>
+                    `;
+                }
                 if (bookmarkTabBtn) {
                     bookmarkTabBtn.classList.remove('bg-indigo-50', 'text-indigo-700');
                     bookmarkTabBtn.classList.add('text-slate-700', 'hover:bg-slate-50');
@@ -426,7 +444,7 @@
                                     <h4 class="text-sm font-bold text-indigo-600">${giveawayName}</h4>
                                     <div class="flex items-center space-x-1">
                                         <button onclick="toggleBookmark(${item.id})" title="บันทึกโพสต์นี้" class="p-1.5 rounded-full text-xs transition ${isBookmarked ? 'bg-amber-100 text-amber-600' : 'bg-slate-100 hover:bg-slate-200 text-slate-400'}">
-                                            <span>${isBookmarked ? '📌' : '🔖'}</span>
+                                            <svg class="w-4 h-4 inline-block ${isBookmarked ? 'fill-current text-amber-600' : 'text-slate-500'}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
                                         </button>
                                         <button onclick="likeGiveaway(${item.id}, ${likesCount})" class="flex items-center space-x-1 bg-pink-50 hover:bg-pink-100 text-pink-600 px-2 py-1 rounded-full text-xs font-semibold transition">
                                             <span>❤️</span>

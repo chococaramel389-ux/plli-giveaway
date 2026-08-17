@@ -736,19 +736,33 @@
             if (dropdown) dropdown.classList.add('hidden');
         }
 
+// ฟังก์ชันเปิด-ปิดเมนูดรอปดาวน์
 function toggleLoginDropdown(event) {
     event.stopPropagation();
     const dropdown = document.getElementById('loginDropdown');
     dropdown.classList.toggle('hidden');
 }
 
-// ปิดเมนูดรอปดาวน์อัตโนมัติเมื่อคลิกพื้นที่อื่นนอกเมนู
+// ปิดเมนูเมื่อคลิกพื้นที่อื่นนอกปุ่ม
 window.addEventListener('click', () => {
     const loginDropdown = document.getElementById('loginDropdown');
     if (loginDropdown && !loginDropdown.classList.contains('hidden')) {
         loginDropdown.classList.add('hidden');
     }
 });
+
+// ฟังก์ชันล็อกอินด้วย Google
+async function loginWithGoogle() {
+    const { error } = await sbClient.auth.signInWithOAuth({
+        provider: 'google',
+        options: { 
+            redirectTo: window.location.origin 
+        }
+    });
+    if (error) {
+        showPopup('เกิดข้อผิดพลาด', 'ล็อกอินด้วย Google ไม่สำเร็จ: ' + error.message, '❌');
+    }
+}
         
         checkUser().then(() => {
             fetchGiveaways();

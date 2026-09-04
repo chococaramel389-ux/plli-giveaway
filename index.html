@@ -433,7 +433,7 @@
                             </div>
                             
                             <div class="w-full aspect-square bg-slate-100 relative overflow-hidden flex items-center justify-center border-y border-slate-100 cursor-pointer group" onclick="openImageModal('${imageUrl}')">
-                                <img src="${imageUrl}" alt="Freebie Image" class="w-full h-full object-cover group-hover:scale-105 transition duration-300 ${isSoldOut ? 'opacity-40 grayscale' : ''}">
+                                <img src="${imageUrl}" alt="Freebie Image" class="w-full h-full object-cover group-hover:scale-105 transition duration-300 ${isSoldOut ? 'opacity-40 grayscale' : ''}" loading="lazy">
                                 
                                 ${isSoldOut ? `
                                     <div class="absolute inset-0 flex items-center justify-center">

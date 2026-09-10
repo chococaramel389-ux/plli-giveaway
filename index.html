@@ -172,6 +172,10 @@
                     <button type="button" onclick="closeEditModal()" class="px-4 py-2 text-sm text-slate-500 hover:bg-slate-100 rounded-xl">ยกเลิก</button>
                     <button type="submit" id="editSubmitBtn" class="px-4 py-2 text-sm bg-indigo-600 text-white font-medium rounded-xl hover:bg-indigo-700">บันทึกการแก้ไข</button>
                 </div>
+                <div>
+    <label class="block text-xs font-semibold text-slate-600 mb-1">เปลี่ยนรูปภาพ (ถ้าต้องการเปลี่ยน)</label>
+    <input type="file" id="editImageFile" accept="image/*" class="w-full px-3 py-2 border rounded-xl text-xs text-slate-500 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100">
+</div>
             </form>
         </div>
     </div>
@@ -515,41 +519,65 @@
             document.getElementById('editModal').classList.add('hidden');
         }
 
-        async function updateGiveaway(e) {
-            e.preventDefault();
-            const submitBtn = document.getElementById('editSubmitBtn');
-            submitBtn.innerText = 'กำลังบันทึก...';
-            submitBtn.disabled = true;
+       async function updateGiveaway(e) {
+    e.preventDefault();
+    const submitBtn = document.getElementById('editSubmitBtn');
+    submitBtn.innerText = 'กำลังบันทึก...';
+    submitBtn.disabled = true;
 
-            try {
-                const id = Number(document.getElementById('editId').value);
-                const location = document.getElementById('editLocation').value;
-                const giveaway_name = document.getElementById('editGiveawayName').value;
-                const quantity = document.getElementById('editQuantity').value;
-                const tweet_url = document.getElementById('editTweetUrl').value;
-                const caption = document.getElementById('editCaption').value;
+    try {
+        const id = document.getElementById('editId').value;
+        const fileInput = document.getElementById('editImageFile');
+        const file = fileInput.files[0];
 
-                const { error } = await sbClient.from('giveaways').update({
-                    location,
-                    giveaway_name,
-                    quantity,
-                    tweet_url,
-                    caption
-                }).eq('id', id);
+        // ค้นหาข้อมูลเดิมเพื่อเอา imageUrl เก่าไว้เผื่อไม่ได้เปลี่ยนรูป
+        const targetItem = allGiveaways.find(item => item.id == id);
+        let imageUrl = targetItem ? targetItem.image_url : '';
 
-                if (error) throw new Error(error.message);
+        // ถ้ามีการเลือกรูปใหม่ ให้ส่งไป Cloudinary ก่อน
+        if (file) {
+            submitBtn.innerText = 'กำลังอัปโหลดรูปใหม่...';
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', 'plli_giveaway');
 
-                closeEditModal();
-                showPopup('สำเร็จ', 'อัปเดตข้อมูลเรียบร้อยแล้ว!', '🎉');
-                fetchGiveaways();
-            } catch (err) {
-                showPopup('เกิดข้อผิดพลาด', err.message, '❌');
-            } finally {
-                submitBtn.innerText = 'บันทึกการแก้ไข';
-                submitBtn.disabled = false;
-            }
+            const clRes = await fetch('https://api.cloudinary.com/v1_1/eao6ymfn/image/upload', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const clData = await clRes.json();
+            if (!clData.secure_url) throw new Error('อัปโหลดรูปไม่สำเร็จ');
+            imageUrl = clData.secure_url;
         }
 
+        // อัปเดตข้อมูลลง Supabase
+        const { error } = await sbClient.from('giveaways').update({
+            location: document.getElementById('editLocation').value,
+            giveaway_name: document.getElementById('editGiveawayName').value,
+            quantity: parseInt(document.getElementById('editQuantity').value),
+            tweet_url: document.getElementById('editTweetUrl').value,
+            image_url: imageUrl,
+            caption: document.getElementById('editCaption').value
+        }).eq('id', id);
+
+        if (error) throw error;
+
+        showPopup('สำเร็จ!', 'แก้ไข Giveaway เรียบร้อยแล้ว', '✨');
+        closeEditModal();
+        document.getElementById('editGiveawayForm').reset();
+        
+        // เด้งกลับหน้าหลักและรีเฟรชข้อมูล
+        currentFilterMode = 'all';
+        fetchGiveaways();
+
+    } catch (err) {
+        showPopup('เกิดข้อผิดพลาด', err.message, '❌');
+    } finally {
+        submitBtn.innerText = 'บันทึกการแก้ไข';
+        submitBtn.disabled = false;
+    }
+}
         async function toggleStatus(id, itemOwner, currentStatus) {
             if (!currentUser) {
                 showPopup('แจ้งเตือน', 'กรุณาเข้าสู่ระบบก่อนเปลี่ยนสถานะ', '⚠️');

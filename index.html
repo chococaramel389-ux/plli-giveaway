@@ -454,42 +454,41 @@
     try {
         const fileInput = document.getElementById('imageFile');
         const file = fileInput.files[0];
+        if (!file) throw new Error('กรุณาเลือกรูปภาพ');
+
+        // อัปโหลดรูปขึ้น Cloudinary
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', 'plli_giveaway');
+
+        const clRes = await fetch('https://api.cloudinary.com/v1_1/eao6ymfn/image/upload', {
+            method: 'POST',
+            body: formData
+        });
         
-        let imageUrl = '';
-        if (file) {
-            submitBtn.innerText = 'กำลังอัปโหลดรูป...';
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('upload_preset', 'plli_giveaway');
+        const clData = await clRes.json();
+        if (!clData.secure_url) throw new Error('อัปโหลดรูปไม่สำเร็จ');
+        const imageUrl = clData.secure_url;
 
-            const clRes = await fetch('https://api.cloudinary.com/v1_1/eao6ymfn/image/upload', {
-                method: 'POST',
-                body: formData
-            });
-            
-            const clData = await clRes.json();
-            if (!clData.secure_url) throw new Error('อัปโหลดรูปไม่สำเร็จ');
-            imageUrl = clData.secure_url;
-        }
-
-        // บันทึกข้อมูลลง Supabase Database
-        const { error } = await sbClient.from('giveaways').insert([
-            {
-                location: document.getElementById('location').value,
-                giveaway_name: document.getElementById('giveawayName').value,
-                quantity: parseInt(document.getElementById('quantity').value),
-                tweet_url: document.getElementById('tweetUrl').value,
-                image_url: imageUrl,
-                caption: document.getElementById('caption').value,
-                twitter_handle: currentUser
-            }
-        ]);
+        // บันทึกข้อมูลลง Supabase
+        const { error } = await sbClient.from('giveaways').insert([{
+            location: document.getElementById('location').value,
+            giveaway_name: document.getElementById('giveawayName').value,
+            quantity: parseInt(document.getElementById('quantity').value),
+            tweet_url: document.getElementById('tweetUrl').value,
+            image_url: imageUrl,
+            caption: document.getElementById('caption').value,
+            twitter_handle: currentUser
+        }]);
 
         if (error) throw error;
 
         showPopup('สำเร็จ!', 'ลงทะเบียน Giveaway เรียบร้อยแล้ว', '✨');
         closeAddModal();
         document.getElementById('giveawayForm').reset();
+        
+        // เด้งกลับมาหน้าหลัก
+        currentFilterMode = 'all'; 
         fetchGiveaways();
 
     } catch (err) {

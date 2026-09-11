@@ -537,10 +537,18 @@
 
         async function addGiveaway(e) {
             e.preventDefault();
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.innerText = 'กำลังอัปโหลด...';
-            submitBtn.disabled = true;
-
+            const { error: insertError } = await sbClient.from('giveaways').insert([{
+                    twitter_handle: currentUser,
+                    location: document.getElementById('location').value,
+                    giveaway_name: document.getElementById('giveawayName').value,
+                    quantity: parseInt(document.getElementById('quantity').value),
+                    tweet_url: document.getElementById('tweetUrl').value,
+                    image_url: imageUrl,
+                    caption: document.getElementById('caption').value,
+                    status: 'กำลังแจก',
+                    likes: 0,
+                    created_at: new Date().toISOString() // บันทึกเวลาปัจจุบัน
+                }]);
             try {
                 const fileInput = document.getElementById('imageFile');
                 const file = fileInput.files[0];

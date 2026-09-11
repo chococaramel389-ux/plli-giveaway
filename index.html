@@ -393,13 +393,12 @@
             }
 
             if (searchQuery) {
-                dataToRender = dataToRender.filter(item => {
-                    const name = (item.giveaway_name || '').toLowerCase();
-                    const loc = (item.location || '').toLowerCase();
-                    const handle = (item.twitter_handle || '').toLowerCase();
-                    const caption = (item.caption || '').toLowerCase();
-                    return name.includes(searchQuery) || loc.includes(searchQuery) || handle.includes(searchQuery) || caption.includes(searchQuery);
-                });
+                // จัดเรียงลำดับ เก่า ⇄ ใหม่ ตามเวลาที่สร้าง
+            dataToRender.sort((a, b) => {
+                const timeA = a.created_at ? new Date(a.created_at).getTime() : 0;
+                const timeB = b.created_at ? new Date(b.created_at).getTime() : 0;
+                return sortNewestFirst ? (timeB - timeA) : (timeA - timeB);
+            });
             }
 
             // จัดเรียงลำดับ เก่า ⇄ ใหม่ ตามไอดี

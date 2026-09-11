@@ -273,17 +273,27 @@
             window.location.reload();
         }
 
-        async function fetchGiveaways() {
-            const { data, error } = await sbClient.from('giveaways').select('*').order('id', { ascending: false });
-            if (error) {
-                showPopup('เกิดข้อผิดพลาด', 'ไม่สามารถโหลดข้อมูลได้: ' + error.message, '❌');
-                return;
-            }
-            allGiveaways = data || [];
-            document.getElementById('totalCount').innerText = allGiveaways.length;
-            updateBookmarkCountUI();
-            renderGiveaways();
-        }
+        // กำหนดตัวแปรเก็บสถานะการเรียงลำดับไว้ด้านนอก (ค่าเริ่มต้นใหม่ไปเก่า)
+let currentSortOrder = 'desc'; 
+
+async function fetchGiveaways() {
+    const { data, error } = await sbClient.from('giveaways').select('*');
+    if (error) {
+        showPopup('เกิดข้อผิดพลาด', 'ไม่สามารถโหลดข้อมูลได้: ' + error.message, '❌');
+        return;
+    }
+    
+    allGiveaways = data || [];
+    
+    // จัดเรียงข้อมูลตามทิศทางปัจจุบัน (รองรับปุ่มลูกศรในข้อ 3)
+    allGiveaways.sort((a, b) => {
+        return currentSortOrder === 'asc' ? a.id - b.id : b.id - a.id;
+    });
+
+    document.getElementById('totalCount').innerText = allGiveaways.length;
+    updateBookmarkCountUI();
+    renderGiveaways();
+}
 
         function getBookmarks() {
             try {

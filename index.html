@@ -539,63 +539,66 @@
         }
 
         async function addGiveaway(e) {
-            e.preventDefault();
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.innerText = 'กำลังอัปโหลด...';
-            submitBtn.disabled = true;
+    e.preventDefault();
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.innerText = 'กำลังอัปโหลด...';
+    submitBtn.disabled = true;
 
-            try {
-                const twitter_handle = currentUser;
-                const location = document.getElementById('location').value;
-                const giveaway_name = document.getElementById('giveawayName').value;
-                const quantity = document.getElementById('quantity').value;
-                const tweet_url = document.getElementById('tweetUrl').value;
-                const caption = document.getElementById('caption').value;
-                const fileInput = document.getElementById('imageFile');
-                const file = fileInput.files[0];
-                let imageUrl = '';
+    try {
+        const twitter_handle = currentUser;
+        const location = document.getElementById('location').value;
+        const giveaway_name = document.getElementById('giveawayName').value;
+        const quantity = document.getElementById('quantity').value;
+        const tweet_url = document.getElementById('tweetUrl').value;
+        const caption = document.getElementById('caption').value;
+        const fileInput = document.getElementById('imageFile');
+        const file = fileInput.files[0];
+        let imageUrl = '';
 
-                if (file) {
-                    const fileName = `${Date.now()}_${file.name}`;
-                    const { data: uploadData, error: uploadError } = await sbClient.storage
-                        .from('plli-photo')
-                        .upload(fileName, file);
+        if (file) {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', 'plli_giveaway'); // ใส่ Upload Preset แบบ Unsigned ของคุณ
 
-                    if (uploadError) throw new Error('อัปโหลดรูปไม่สำเร็จ: ' + uploadError.message);
+            const response = await fetch('https://api.cloudinary.com/v1_1/eao6ymfn/image/upload', {
+                method: 'POST',
+                body: formData
+            });
+            const uploadData = await response.json();
 
-                    const { data: publicUrlData } = sbClient.storage
-                        .from('plli-photo')
-                        .getPublicUrl(fileName);
-                    imageUrl = publicUrlData.publicUrl;
-                }
-
-                const id = Date.now();
-                const { error: insertError } = await sbClient.from('giveaways').insert([{
-                    id, 
-                    twitter_handle, 
-                    location, 
-                    giveaway_name, 
-                    quantity, 
-                    tweet_url, 
-                    image_url: imageUrl, 
-                    caption, 
-                    status: 'กำลังแจก',
-                    likes: 0
-                }]);
-
-                if (insertError) throw new Error(insertError.message);
-
-                closeAddModal();
-                document.getElementById('giveawayForm').reset();
-                showPopup('สำเร็จ', 'ลงทะเบียนเรียบร้อยแล้ว!', '🎉');
-                fetchGiveaways();
-            } catch (err) {
-                showPopup('เกิดข้อผิดพลาด', err.message, '❌');
-            } finally {
-                submitBtn.innerText = 'บันทึก';
-                submitBtn.disabled = false;
+            if (!uploadData.secure_url) {
+                throw new Error('อัปโหลดรูปไป Cloudinary ไม่สำเร็จ');
             }
+            imageUrl = uploadData.secure_url;
         }
+
+        const id = Date.now();
+        const { error: insertError } = await sbClient.from('giveaways').insert([{
+            id, 
+            twitter_handle, 
+            location, 
+            giveaway_name, 
+            quantity, 
+            tweet_url, 
+            image_url: imageUrl, 
+            caption, 
+            status: 'กำลังแจก',
+            likes: 0
+        }]);
+
+        if (insertError) throw new Error(insertError.message);
+
+        closeAddModal();
+        document.getElementById('giveawayForm').reset();
+        showPopup('สำเร็จ', 'ลงทะเบียนเรียบร้อยแล้ว!', '🎉');
+        fetchGiveaways();
+    } catch (err) {
+        showPopup('เกิดข้อผิดพลาด', err.message, '❌');
+    } finally {
+        submitBtn.innerText = 'บันทึก';
+        submitBtn.disabled = false;
+    }
+}
 
         function openEditModal(id) {
             document.querySelectorAll('.card-dropdown').forEach(el => el.classList.add('hidden'));

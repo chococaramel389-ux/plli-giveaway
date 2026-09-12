@@ -348,7 +348,7 @@
             const bookmarkTabBtn = document.getElementById('bookmarkTabBtn');
 
             if (currentFilterMode === 'mine') {
-                dataToRender = dataToRender.filter(item => item.twitter_handle === currentUser);
+                dataToRender = dataToRender.filter(item => item.twitter_handle === currentUser || currentUser === '@TC_294');
                 document.getElementById('sub-title').innerText = `แสดงเฉพาะของคุณ (${currentUser})`;
                 if (mineBtnText) mineBtnText.innerText = "กลับหน้าหลัก";
                 if (bookmarkBtnText) {
